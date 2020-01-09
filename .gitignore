@@ -1,0 +1,4 @@
+# gitignore
+
+**/build
+Assignment0_CPlusPlus/intro/datasize
