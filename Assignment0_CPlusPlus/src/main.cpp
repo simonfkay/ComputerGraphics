@@ -1,5 +1,5 @@
 // Include our custom library
-#include "ppm.h"
+#include "PPM.h"
 
 int main() {
 

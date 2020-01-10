@@ -4,7 +4,5 @@
 **/CMakeFiles
 **/CMakeCache.txt
 Assignment0_CPlusPlus/intro/*
-.idea/
-ComputerGraphics.iml
 
 !Assignment0_CPlusPlus/intro/*.cpp

@@ -1,15 +1,18 @@
 #include <fstream>
 #include <iostream>
+#include <sstream>
 
-#include "ppm.h"
+#include "PPM.h"
 
 // Constructor loads a filename with the .ppm extension
 PPM::PPM(std::string fileName) {
     std::vector<std::string> fileContents = PPM::loadFile(fileName);
-    PPM::fetchMetadata(fileContents);
+    std::vector<int> metadata = PPM::fetchMetadata(fileContents);
+    
+    m_width = metadata[0];
+    m_height = metadata[1];
+    m_maxVal = metadata[2];
 
-    //std::cout << (*metadata)[0] << std::endl;
-    //delete metadata;
     //std::vector<std::string> processedLines = processLines(fileContents);
 
     //std::cout << fileContents << std::endl;
@@ -57,68 +60,49 @@ std::vector<std::string> PPM::loadFile(std::string fileName) {
 }
 
 // Fetches metadata in first part of line data
-void fetchMetadata(std::vector<std::string> fileData) {
-    std::cout << "Fetching metadata." << std::endl;
-    std::vector<unsigned char> returnValue;
-/**
-    // Files must have a properly formatted header (does not check formatting,
-    // just assumes it)
-    if (fileData.size() < 4) {
-        std::cout << "File must have a proper 4 line header." << std::endl;
-        return returnValue;
-    }
+// TODO: Error checking
+std::vector<int> PPM::fetchMetadata(std::vector<std::string> fileData) {
+    std::vector<int> returnValue;
+
+    // TODO: Check that files have at least 4 lines
     
-    // Read lines and break them down
+    // Read relevant lines and break them down
     std::string sizeData = fileData[2];
     std::string maxValue = fileData[3];
 
+    std::vector<std::string> separateWords = PPM::separateWords(sizeData);
 
-    std::vector<std::string> separateWords = separateWords(sizeData);
+    // TODO: Check that size data has 2 words
 
-    std::cout << "Metadata:" << std::endl;
+    std::string width = separateWords[0];
+    std::string height = separateWords[1];
 
-    for (int ii = 0; ii < separateWords.size(); ++ii) {
-        std::cout << separateWords[ii] << std::endl;
-    }
-    
+    // TODO: Make sure that all of these can be parsed as numbers
 
-    // TODO: Error: if separateWords isn't 2 long
-
-    //std::string width = separateWords[0];
-    //std::string height = separateWords[1];
-
-    // TODO: Parse strings for unsigned integers:
-    //         - Test: Is stoi the correct method here?
-
-    int width = atoi("3");
-
-    unsigned char widthChar = stoi(width);
-    unsigned char heightChar = stoi(height);
-    unsigned char maxValueChar = stoi(maxValue);
-
-    // End TODO
+    int widthChar = stoi(width);
+    int heightChar = stoi(height);
+    int maxValueChar = stoi(maxValue);
 
     returnValue.push_back(widthChar);
     returnValue.push_back(heightChar);
-    returnValue.push_back(maxValueChar);*/
-    //return returnValue;
+    returnValue.push_back(maxValueChar);
+    return returnValue;
 }
 
-/**
-std::vector<std::string> separateWords(std::string line) {
-    std::cout << std::endl << "Separating Words:" << std::endl;
-    std::istringstream stream(line);
+// Separates string into a vector of words
+std::vector<std::string> PPM::separateWords(std::string line) {
+    std::istringstream stream (line);
     std::vector<std::string> separateWords;
   
     do { 
         std::string word; 
         stream >> word;
-        std::cout << "Word: " << word << std::endl;
         separateWords.push_back(word);
     } while (stream); 
     return separateWords;
 }
 
+/**
 // Convert line strings into usable data
 std::vector<std::string> processLines(std::vector<std::string> lineData) {
 

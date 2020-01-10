@@ -1,9 +1,9 @@
-/** @file ppm.h
+/** @file PPM.h
  *  @brief Class for working with PPM images
  *  
  *  Class for working with P3 PPM images specifically.
  *
- *  @author your_name_here
+ *  @author Simon Kay
  *  @bug No known bugs.
  */
 #ifndef PPM_H
@@ -59,7 +59,10 @@ private:
     std::vector<std::string> loadFile(std::string fileName);
 
     // Fetches metadata in first part of line data
-    void fetchMetadata(std::vector<std::string> fileData);
+    std::vector<int> fetchMetadata(std::vector<std::string> fileData);
+
+    // Separates string into a vector of words
+    std::vector<std::string> separateWords(std::string line);
 
     // Convert line strings into usable data
     std::vector<std::string> processLines(std::vector<std::string> lineData);
