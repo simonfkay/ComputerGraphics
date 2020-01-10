@@ -10,6 +10,7 @@
 #define PPM_H
 
 #include <string>
+#include <vector>
 
 class PPM {
 public:
@@ -52,9 +53,16 @@ private:
     // Store width and height of image.
     int m_width{0};
     int m_height{0};
+    int m_maxVal{0};
 
-    // Load the desired file into a raw string
-    std::string loadFile();
+    // Load the desired file into a vector of raw strings
+    std::vector<std::string> loadFile(std::string fileName);
+
+    // Fetches metadata in first part of line data
+    void fetchMetadata(std::vector<std::string> fileData);
+
+    // Convert line strings into usable data
+    std::vector<std::string> processLines(std::vector<std::string> lineData);
 };
 
 
