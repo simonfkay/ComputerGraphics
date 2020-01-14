@@ -65,7 +65,21 @@ private:
     std::vector<std::string> separateWords(std::string line);
 
     // Convert line strings into usable data
-    std::vector<std::string> processLines(std::vector<std::string> lineData);
+    void processLines(std::vector<std::string> lineData);
+
+    std::string toString();
+
+    bool isComment(std::string line);
+
+    bool checkVersion(std::string line);
+
+    void getDims(std::string line);
+
+    void getMax(std::string line);
+
+    std::vector<int> getImageLine(std::string line);
+
+    void setPixels(std::vector<int> numbers);
 };
 
 
