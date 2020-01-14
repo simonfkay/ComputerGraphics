@@ -1,11 +1,10 @@
 // Include our custom library
 #include "PPM.h"
 
-int main(){
-
-    PPM myPPM("./textures/test1.ppm");
+int main() {
+    PPM myPPM("../textures/test1.ppm");
     myPPM.darken();
-    myPPM.savePPM("./textures/test1_darken.ppm");
+    myPPM.savePPM("../textures/test_darken1.ppm");
 
     return 0;
 }

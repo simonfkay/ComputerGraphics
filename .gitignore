@@ -1,0 +1,8 @@
+# gitignore
+
+**/build
+**/CMakeFiles
+**/CMakeCache.txt
+Assignment0_CPlusPlus/intro/*
+
+!Assignment0_CPlusPlus/intro/*.cpp
