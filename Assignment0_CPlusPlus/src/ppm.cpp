@@ -4,6 +4,8 @@
 
 #include "PPM.h"
 
+//// PUBLIC:
+
 // Constructor loads a filename with the .ppm extension
 PPM::PPM(std::string fileName) {
     std::vector<std::string> fileContents = PPM::loadFile(fileName);
@@ -47,10 +49,10 @@ void PPM::darken() {
 
 // Sets a pixel to a specific R,G,B value 
 void PPM::setPixel(int x, int y, int R, int G, int B) {
-/*    if (!this->m_PixelData) {
+    if (!this->m_PixelData) {
         std::cerr << "Pixel data must first be initialized." << std::endl;
         return;
-    }*/
+    }
 
     unsigned int redIndex = y * this->m_width * 3 + x * 3;
 
@@ -62,6 +64,63 @@ void PPM::setPixel(int x, int y, int R, int G, int B) {
     this->m_PixelData[redIndex] = R;
     this->m_PixelData[redIndex + 1] = G;
     this->m_PixelData[redIndex + 2] = B;
+}
+
+//// PRIVATE:
+
+// Verifies that the given line specifies the correct P3 format of PPM files
+bool PPM::checkVersion(std::string line) {
+    if (line != "P3") {
+        std::cerr << "Only P3 .ppm files can be loaded." << std::endl;
+        throw -1;
+    }
+    return true;
+}
+
+// Gets the dimensions of the image from the given line
+void PPM::getDims(std::string line) {
+    std::vector<std::string> words = PPM::separateWords(line);
+
+    if (words.size() != 2) {
+        std::cerr << "Line specifying image dimensions must contain two integers." << std::endl;
+        throw -1;
+    }
+
+    this->m_width = stoi(words[0]);
+    this->m_height = stoi(words[1]);
+}
+
+// Parses the given line for valid pixel values
+std::vector<int> PPM::getImageLine(std::string line) {
+    std::vector<std::string> words = PPM::separateWords(line);
+    std::vector<int> numbers;
+
+    for (unsigned int ii = 0; ii < words.size(); ++ii) {
+        numbers.push_back(stoi(words[ii]));
+    }
+
+    return numbers;
+}
+
+// Gets the maximum pixel value of the image from the given line
+void PPM::getMax(std::string line) {
+    std::vector<std::string> words = PPM::separateWords(line);
+
+    if (words.size() != 1) {
+        std::cerr << "Line specifying maximum pixel value must contain one integer." << std::endl;
+        throw -1;
+    }
+
+    this->m_maxVal = stoi(words[0]);
+}
+
+// Checks if the given line is a PPM comment (i.e. line starts with '#')
+bool PPM::isComment(std::string line) {
+    if (line.size() == 0) {
+        std::cerr << "PPM files should not have any empty lines." << std::endl;
+        throw -1;
+    }
+    return line.at(0) == '#';
 }
 
 // Load the desired file into raw strings for each line
@@ -115,62 +174,12 @@ void PPM::processLines(std::vector<std::string> fileContents) {
         }
 
         std::vector<int> lineNumbers = PPM::getImageLine(line);
-        for (int jj = 0; jj < lineNumbers.size(); ++jj) {
+        for (unsigned int jj = 0; jj < lineNumbers.size(); ++jj) {
             numbers.push_back(lineNumbers[jj]);
         }
     }
 
     PPM::setPixels(numbers);
-}
-
-bool PPM::isComment(std::string line) {
-    if (line.size() == 0) {
-        std::cerr << "PPM files should not have any empty lines." << std::endl;
-        throw -1;
-    }
-    return line.at(0) == '#';
-}
-
-bool PPM::checkVersion(std::string line) {
-    if (line != "P3") {
-        std::cerr << "Only P3 .ppm files can be loaded." << std::endl;
-        throw -1;
-    }
-    return true;
-}
-
-void PPM::getDims(std::string line) {
-    std::vector<std::string> words = PPM::separateWords(line);
-
-    if (words.size() != 2) {
-        std::cerr << "Line specifying image dimensions must contain two integers." << std::endl;
-        throw -1;
-    }
-
-    this->m_width = stoi(words[0]);
-    this->m_height = stoi(words[1]);
-}
-
-void PPM::getMax(std::string line) {
-    std::vector<std::string> words = PPM::separateWords(line);
-
-    if (words.size() != 1) {
-        std::cerr << "Line specifying maximum pixel value must contain one integer." << std::endl;
-        throw -1;
-    }
-
-    this->m_maxVal = stoi(words[0]);
-}
-
-std::vector<int> PPM::getImageLine(std::string line) {
-    std::vector<std::string> words = PPM::separateWords(line);
-    std::vector<int> numbers;
-
-    for (unsigned int ii = 0; ii < words.size(); ++ii) {
-        numbers.push_back(stoi(words[ii]));
-    }
-
-    return numbers;
 }
 
 // Separates string into a vector of words
@@ -196,26 +205,8 @@ std::vector<std::string> PPM::separateWords(std::string line) {
     return words;
 }
 
-std::string PPM::toString() {
-    std::string asString = "P3\n" +
-                           std::to_string(this->m_width) + " " + std::to_string(this->m_height) + "\n" +
-                           std::to_string(this->m_maxVal) + "\n";
-
-    for (unsigned int ii = 0; ii < this->m_height; ++ii) {
-        for (unsigned int jj = 0; jj < (this->m_width * 3); ++jj) {
-            unsigned char entry = this->m_PixelData[ii * 3 * this->m_width + jj];
-            asString += " " + std::to_string((int) entry) + " ";
-
-            if (jj % 3 == 2 && jj != this->m_width * 3) {
-                asString += "  ";
-            }
-        }
-        asString += "\n";
-    }
-
-    return asString;
-}
-
+// With the given integer values from the file, populates the internal structure of this object to be
+// usable
 void PPM::setPixels(std::vector<int> numbers) {
     this->m_PixelData = new unsigned char[numbers.size()];
 
@@ -236,38 +227,23 @@ void PPM::setPixels(std::vector<int> numbers) {
     }
 }
 
+// Converts the current state of this object to a string to be printed back out to a file
+std::string PPM::toString() {
+    std::string asString = "P3\n" +
+                           std::to_string(this->m_width) + " " + std::to_string(this->m_height) + "\n" +
+                           std::to_string(this->m_maxVal) + "\n";
 
+    for (unsigned int ii = 0; ii < this->m_height; ++ii) {
+        for (unsigned int jj = 0; jj < (this->m_width * 3); ++jj) {
+            unsigned char entry = this->m_PixelData[ii * 3 * this->m_width + jj];
+            asString += " " + std::to_string((int) entry) + " ";
 
+            if (jj % 3 == 2 && jj != this->m_width * 3) {
+                asString += "  ";
+            }
+        }
+        asString += "\n";
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return asString;
+}

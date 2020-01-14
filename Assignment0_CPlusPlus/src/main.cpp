@@ -1,13 +1,10 @@
 // Include our custom library
 #include "PPM.h"
-#include <iostream>
 
 int main() {
-
-    PPM myPPM("../textures/test.ppm");
+    PPM myPPM("../textures/test1.ppm");
     myPPM.darken();
-    myPPM.savePPM("../textures/test_darken.ppm");
-    std::cout << "Done saving." << std::endl;
+    myPPM.savePPM("../textures/test_darken1.ppm");
 
     return 0;
 }
