@@ -11,12 +11,11 @@
 ## Modify this section
 
 - How many hours did it take you to complete this lab?
+  - 2 hours
 - Did you collaborate with any other students/TAs/Professors?
+  - No
 - Did you use any external resources? (Cite them below)
-  - tbd
-  - tbd
-- (Optional) What was your favorite part of the lab?
-- (Optional) How would you improve the lab?
+  - The supplied video on baryocentric coordinates (https://www.youtube.com/watch?v=HYAgJN3x4GA)
 
 ## Logistics
 

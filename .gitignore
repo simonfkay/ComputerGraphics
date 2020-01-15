@@ -4,5 +4,6 @@
 **/CMakeFiles
 **/CMakeCache.txt
 Assignment0_CPlusPlus/intro/*
+Lab1_C_Plus_Plus_SoftwareRasterizerPart1/main
 
 !Assignment0_CPlusPlus/intro/*.cpp
