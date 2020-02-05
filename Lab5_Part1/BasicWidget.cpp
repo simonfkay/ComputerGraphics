@@ -46,7 +46,7 @@ QString BasicWidget::fragmentShaderString() const
 	"out vec4 color;\n"
 	"void main()\n"
 	"{\n"
-	"  color = vec4(0.0f, 0.0f, 1.0f, 1.0f);\n"
+	"  color = vec4(0.678f, 0.969f, 0.714f, 1.0f);\n"
 	"}\n";
   return str;
 }
@@ -150,9 +150,9 @@ void BasicWidget::initializeGL()
   // Define our verts
   static const GLfloat verts[9] =
   {
-	-0.8f, -0.8f, 0.0f, // Left vertex position
-	0.8f, -0.8f, 0.0f,  // right vertex position
-	0.0f,  0.8f, 0.0f,  // Top vertex position
+	-0.4f, 0.4f, 0.0f, // Left vertex position
+	0.4f,  0.4f, 0.0f,  // right vertex position
+	0.0f, -0.4f, 0.0f,  // Top vertex position
   };
   // Set up our buffers and our vao
 #if USE_QT_OPENGL
@@ -199,7 +199,7 @@ void BasicWidget::paintGL()
   glDisable(GL_DEPTH_TEST);
   glDisable(GL_CULL_FACE);
 
-  glClearColor(0.f, 0.f, 0.f, 1.f);
+  glClearColor(0.749f, 0.843f, 0.918f, 1.f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 #if USE_QT_OPENGL
