@@ -175,9 +175,9 @@ void BasicWidget::initializeGL()
   // Define our verts
   static const GLfloat verts[12] =
   {
-	-0.8f, -0.8f, 0.0f, // Left vertex position
-	0.8f, -0.8f, 0.0f,  // right vertex position
-	-0.8f,  0.8f, 0.0f,  // Top vertex position
+	 -0.8f, -0.8f, 0.0f, // Left vertex position
+	 0.8f, -0.8f, 0.0f,  // right vertex position
+	 -0.8f,  0.8f, 0.0f,  // Top vertex position
     0.8f, 0.8f, 0.0f
   };
   // Define our vert colors
@@ -207,6 +207,8 @@ void BasicWidget::initializeGL()
 
   // TODO:  Generate our color buffer
   cbo_.create();
+  cbo_.bind();
+  
   // TODO:  Generate our index buffer
   ibo_.create();
 
@@ -217,9 +219,13 @@ void BasicWidget::initializeGL()
   shaderProgram_.enableAttributeArray(0);
   shaderProgram_.setAttributeBuffer(0, GL_FLOAT, 0, 3);
   cbo_.bind();
+  cbo_.allocate(colors, 16 * sizeof(GL_FLOAT));
+
   shaderProgram_.enableAttributeArray(1);
   shaderProgram_.setAttributeBuffer(1, GL_FLOAT, 0, 4);
   ibo_.bind();
+  ibo_.allocate(idx, 6 * sizeof(GL_UNSIGNED_INT));
+
   // Release the vao THEN the vbo
   vao_.release();
   shaderProgram_.release();
@@ -267,7 +273,8 @@ void BasicWidget::paintGL()
   shaderProgram_.bind();
   vao_.bind();
   // TODO: Change number of indices drawn
-  glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+  uint numIdx = drawTriangle_ ? 3 : 6;
+  glDrawElements(GL_TRIANGLES, numIdx, GL_UNSIGNED_INT, 0);
   // ENDTODO
   vao_.release();
   shaderProgram_.release();
