@@ -3,9 +3,9 @@
 //////////////////////////////////////////////////////////////////////
 // Publics
 #if USE_QT_OPENGL
-  BasicWidget::BasicWidget(QWidget* parent) : QOpenGLWidget(parent), vbo_(QOpenGLBuffer::VertexBuffer), cbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer)
+  BasicWidget::BasicWidget(QWidget* parent) : QOpenGLWidget(parent), vbo_(QOpenGLBuffer::VertexBuffer), cbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), drawTriangle_(true)
 #else
-  BasicWidget::BasicWidget(QWidget* parent) : QOpenGLWidget(parent)
+  BasicWidget::BasicWidget(QWidget* parent) : QOpenGLWidget(parent), drawTriangle_(true)
 #endif
 {
   setFocusPolicy(Qt::StrongFocus);
@@ -141,18 +141,18 @@ unsigned int BasicWidget::compileShader(unsigned int type, const QString& shader
 // Protected
 void BasicWidget::keyReleaseEvent(QKeyEvent* keyEvent)
 {
-  // TODO
   // Handle key events here.
   if (keyEvent->key() == Qt::Key_Left) {
     qDebug() << "Left Arrow Pressed";
+    drawTriangle_ = true;
     update();  // We call update after we handle a key press to trigger a redraw when we are ready
   } else if (keyEvent->key() == Qt::Key_Right) {
     qDebug() << "Right Arrow Pressed";
+    drawTriangle_ = false;
     update();  // We call update after we handle a key press to trigger a redraw when we are ready
   } else {
     qDebug() << "You Pressed an unsupported Key!";
   }
-  // ENDTODO
 }
 void BasicWidget::initializeGL()
 {
@@ -206,9 +206,9 @@ void BasicWidget::initializeGL()
   vbo_.allocate(verts, 12 * sizeof(GL_FLOAT));
 
   // TODO:  Generate our color buffer
-  // ENDTODO
+  cbo_.create();
   // TODO:  Generate our index buffer
-  // ENDTODO
+  ibo_.create();
 
   // Create a VAO to keep track of things for us.
   vao_.create();
@@ -220,7 +220,7 @@ void BasicWidget::initializeGL()
   shaderProgram_.enableAttributeArray(1);
   shaderProgram_.setAttributeBuffer(1, GL_FLOAT, 0, 4);
   ibo_.bind();
-  // Releae the vao THEN the vbo
+  // Release the vao THEN the vbo
   vao_.release();
   shaderProgram_.release();
 #else
@@ -231,10 +231,17 @@ void BasicWidget::initializeGL()
   glBindBuffer(GL_ARRAY_BUFFER, vboID_);
   glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(GL_FLOAT), verts, GL_STATIC_DRAW);
 
-  // TODO:  Generate our color buffer
-  // ENDTODO
-  // TODO:  Generate our index buffer
-  // ENDTODO
+  // // TODO:  Generate our color buffer
+  // glGenBuffers(1, &cboID_);
+  // glBindBuffer(GL_ARRAY_BUFFER, cboID_);
+  // glBufferData(GL_ARRAY_BUFFER, 16 * sizeof(GL_FLOAT), colors, GL_STATIC_DRAW);
+  // // ENDTODO
+
+  // // TODO:  Generate our index buffer
+  // glGenBuffers(1, &iboID_);
+  // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboID_);
+  // glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(GL_uint), idx, GL_STATIC_DRAW);
+  // // ENDTODO
 
   vao_.release();
   glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -260,7 +267,7 @@ void BasicWidget::paintGL()
   shaderProgram_.bind();
   vao_.bind();
   // TODO: Change number of indices drawn
-  glDrawElements(GL_TRIANGLES, ??, GL_UNSIGNED_INT, 0);
+  glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
   // ENDTODO
   vao_.release();
   shaderProgram_.release();
@@ -287,7 +294,7 @@ void BasicWidget::paintGL()
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboID_);
   // Render
   // TODO: Change number of indices drawn
-  glDrawElements(GL_TRIANGLES, ??, GL_UNSIGNED_INT, nullptr);
+  glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
   // ENDTODO
   // Unbind everything
   glDisableVertexAttribArray(0);
