@@ -123,7 +123,9 @@ inline Vector4f Normalize(const Vector4f& v) {
 // Vector Projection
 // Note: This is the vector projection of 'a' onto 'b'
 inline Vector4f Project(const Vector4f& a, const Vector4f& b) {
-  return a * Dot(a, Normalize(b));
+  float magb = Magnitude(b);
+  float magproj = Dot(a, b) / (magb * magb);
+  return b * magproj;
 }
 
 // a x b (read: 'a crossed b')
