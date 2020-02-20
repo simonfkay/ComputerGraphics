@@ -20,6 +20,7 @@ private:
   QMatrix4x4 model_;
   QMatrix4x4 view_;
   QMatrix4x4 projection_;
+  bool printed_ = false; // TODO
   
 protected:
   // Required interaction overrides
