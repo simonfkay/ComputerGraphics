@@ -2,7 +2,7 @@
 
 //////////////////////////////////////////////////////////////////////
 // Publics
-BasicWidget::BasicWidget(QWidget* parent) : QOpenGLWidget(parent), vbo_(QOpenGLBuffer::VertexBuffer), cbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), logger_(this)
+BasicWidget::BasicWidget(QWidget* parent) : QOpenGLWidget(parent), vbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), logger_(this)
 {
   setFocusPolicy(Qt::StrongFocus);
 }
@@ -11,10 +11,6 @@ BasicWidget::~BasicWidget()
 {
   vbo_.release();
   vbo_.destroy();
-  // TODO: Remove the CBO
-  cbo_.release();
-  cbo_.destroy();
-  // End TODO
   ibo_.release();
   ibo_.destroy();
   vao_.release();
@@ -126,42 +122,28 @@ void BasicWidget::initializeGL()
   createShader();
 
   // Define our verts
-  static const GLfloat verts[9] =
+  static const GLfloat vertices[21] =
   {
-    0.0f, 0.0f, 0.0f, // Center vertex position
-    1.0f, 1.0f, 0.0f,  // Top right vertex position
-    -1.0f,  1.0f, 0.0f  // Top left vertex position
+    // positions       // colors
+    0.0f, 0.0f, 0.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+    1.0f, 1.0f, 0.0f,  0.0f, 1.0f, 0.0f, 1.0f,
+   -1.0f, 1.0f, 0.0f,  0.0f, 0.0f, 1.0f, 1.0f,
   };
-  // Define our vert colors
-  static const GLfloat colors[12] =
-  {
-      1.0f, 0.0f, 0.0f, 1.0f, // red
-      0.0f, 1.0f, 0.0f, 1.0f, // green
-      0.0f, 0.0f, 1.0f, 1.0f // blue
-  };
+
   // Define our indices
   static const GLuint idx[3] =
   {
       0, 1, 2
   };
+
   // Set up our buffers and our vao
   // Temporary bind of our shader.
   shaderProgram_.bind();
 
-  // TODO:  Create a position + color buffer
-  // Note - use the vbo_ member provided 
   vbo_.create();
   vbo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
   vbo_.bind();
-  vbo_.allocate(verts, 3 * 3 * sizeof(GL_FLOAT));
-  // END TODO
-  
-  // TODO:  Remove the cbo_
-  cbo_.create();
-  cbo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
-  cbo_.bind();
-  cbo_.allocate(colors, 3 * 4 * sizeof(GL_FLOAT));
-  // END TODO
+  vbo_.allocate(vertices, 21 * sizeof(GL_FLOAT));
 
   // TODO:  Generate our index buffer
   ibo_.create();
@@ -178,10 +160,9 @@ void BasicWidget::initializeGL()
   // Note:  Remember that Offset and Stride are expressed in terms
   //        of bytes!
   shaderProgram_.enableAttributeArray(0);
-  shaderProgram_.setAttributeBuffer(0, GL_FLOAT, 0, 3);
-  cbo_.bind();
+  shaderProgram_.setAttributeBuffer(0, GL_FLOAT, 0, 3, 7 * sizeof(GL_FLOAT));
   shaderProgram_.enableAttributeArray(1);
-  shaderProgram_.setAttributeBuffer(1, GL_FLOAT, 0, 4);
+  shaderProgram_.setAttributeBuffer(1, GL_FLOAT, 3 * sizeof(GL_FLOAT), 4, 7 * sizeof(GL_FLOAT));
   // END TODO
 
   ibo_.bind();
