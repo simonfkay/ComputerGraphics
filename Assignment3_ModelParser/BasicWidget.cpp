@@ -18,11 +18,24 @@ BasicWidget::~BasicWidget()
 // Protected
 void BasicWidget::keyReleaseEvent(QKeyEvent* keyEvent)
 {
-  // TODO
-  // Handle key events here.
-  qDebug() << "You Pressed an unsupported Key!";
-  // ENDTODO
+  switch (event->key()) {
+  case Qt::Key_Q:
+    QCoreApplication::quit();
+    break;
+  case Qt::Key_W:
+    // TODO: Draw in wireframe mode
+    break;
+  case Qt::Key_1:
+    // TODO: Draw bunny (default)
+    break;
+  case Qt::Key_2:
+    // TODO: Draw monkey
+    break;
+  default:
+    qDebug() << "You Pressed an unsupported Key!";
+  }
 }
+
 void BasicWidget::initializeGL()
 {
   makeCurrent();

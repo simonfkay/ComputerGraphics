@@ -2,6 +2,7 @@
 #include <utility>
 #include <vector>
 
+// TODO: Write class annotation comment
 class ObjLoader {
 public:
     /**
@@ -35,7 +36,7 @@ private:
      * @throws out_of_range if one of the parsed values is out of the range of
      *                      representable values by an int.
      */
-    void processFaceLine(std::string line);
+    void processFaceLine(std::string line); // TODO: Change such that faces can only have three vertices?
 
     /**
      * Takes a line, and if valid, adds the corresponding parsed data to the
