@@ -11,12 +11,11 @@
 ## Modify this section
 
 - How many hours did it take you to complete this lab?
-  - 3.5h
+  - 4 hours
 - Did you collaborate with any other students/TAs/Professors?
-  - N/A
+  - No
 - Did you use any external resources? (Cite them below)
-  - tbd
-  - tbd
+  - N/A
 
 ## Logistics
 

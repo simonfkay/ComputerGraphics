@@ -33,15 +33,14 @@ QString BasicWidget::vertexShaderString() const
     "layout(location = 1) in vec4 color;\n"
 
     "uniform mat4 modelMatrix;\n"
-//    "uniform mat4 viewMatrix;\n"
-//    "uniform mat4 projectionMatrix;\n"
+    "uniform mat4 viewMatrix;\n"
+    "uniform mat4 projectionMatrix;\n"
     
     "out vec4 vertColor;\n"
 
     "void main()\n"
     "{\n"
-    "  vec4 trans = modelMatrix * vec4(position, 1.0);\n"
-    "  gl_Position = trans;\n"
+    "  gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);\n"
     "  vertColor = color;\n"
     "}\n";
   return str;
@@ -183,51 +182,21 @@ void BasicWidget::resizeGL(int w, int h)
   glViewport(0, 0, w, h);
 
   // Field of View
-  // float FoV = 45.0f;
+  float FoV = 45.0f;
 
-  // glm::mat4 projection = glm::perspective(glm::radians(FoV), (float) w / (float) h, 0.1f, 100.0f);
+  QMatrix4x4 modelMatrix = QMatrix4x4();
+  QMatrix4x4 viewMatrix = QMatrix4x4();
+  viewMatrix.lookAt(QVector3D(1.0f, 3.0f, 2.0f),
+                    QVector3D(0.0f, 0.0f, 0.0f),
+                    QVector3D(0.0f, 1.0f, 0.0f));
+  QMatrix4x4 projectionMatrix = QMatrix4x4();
+  projectionMatrix.perspective(FoV, (float)w/(float)h, 0.1, 100.0);
 
-  // //glm::mat4 view = glm::lookAt(glm::vec3(0, 0, 3), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-  // glm::mat4 view = glm::mat4(1.0f);
-  // // note that we're translating the scene in the reverse direction of where we want to move
-  // view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f)); 
-
-  glm::mat4 model = glm::mat4(1.0f);
-  //model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.0f));
-
-  // QMatrix4x4 projectionQt = QMatrix4x4(glm::value_ptr(view)).transposed();
-  // QMatrix4x4 viewQt = QMatrix4x4(glm::value_ptr(view)).transposed();
-  // QMatrix4x4 modelQt = QMatrix4x4(glm::value_ptr(model)).transposed();
-
-  // if (!printed_) {
-  //   QVector4D row0 = modelQt.row(0);
-  //   QVector4D row1 = modelQt.row(1);
-  //   QVector4D row2 = modelQt.row(2);
-  //   QVector4D row3 = modelQt.row(3);
-
-  //   std::cout << std::endl;
-  //   std::cout << row0.x() << " " << row0.y() << " " << row0.z() << " " << row0.w() << std::endl;
-  //   std::cout << row1.x() << " " << row1.y() << " " << row1.z() << " " << row1.w() << std::endl;
-  //   std::cout << row2.x() << " " << row2.y() << " " << row2.z() << " " << row2.w() << std::endl;
-  //   std::cout << row3.x() << " " << row3.y() << " " << row3.z() << " " << row3.w() << std::endl;
-
-  //   printed_ = true;
-  // }
-
-  // shaderProgram_.setUniformValue("modelMatrix", modelQt);
-  // shaderProgram_.setUniformValue("viewMatrix", viewQt);
-  // shaderProgram_.setUniformValue("projectionMatrix", projectionQt);
-
-  GLint programID = shaderProgram_.programId();
-  GLint modelID = glGetUniformLocation(programID, "modelMatrix");
-  // GLint viewID = glGetUniformLocation(programID, "viewMatrix");
-  // GLint projectionID = glGetUniformLocation(programID, "projectionMatrix");
-  
-  // Send our transformation to the currently bound shader, in the "MVP" uniform
-  // This is done in the main loop since each model will have a different MVP matrix (At least for the M part)
-  glUniformMatrix4fv(modelID, 1, GL_FALSE, &model[0][0]);
-  // glUniformMatrix4fv(viewID, 1, GL_FALSE, glm::value_ptr(view));
-  // glUniformMatrix4fv(projectionID, 1, GL_FALSE, glm::value_ptr(projection));
+  shaderProgram_.bind();
+  shaderProgram_.setUniformValue("modelMatrix", modelMatrix);
+  shaderProgram_.setUniformValue("viewMatrix", viewMatrix);
+  shaderProgram_.setUniformValue("projectionMatrix", projectionMatrix);
+  shaderProgram_.release();
 }
 
 void BasicWidget::paintGL()
