@@ -1,6 +1,7 @@
 #version 330
-layout(location = 0) in vec3 position;
+layout (location = 0) in vec3 position;
 // TODO:  Add an input for texture coordinates
+layout (location = 1) in vec2 textureCoords;
 
 // We now have our camera system set up.
 uniform mat4 modelMatrix;
