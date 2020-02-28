@@ -1,14 +1,45 @@
-#include <string>
-#include <utility>
-#include <vector>
+#pragma once
 
-// TODO: Write class annotation comment
+#include <string>
+
+#include <QPair>
+#include <QVector>
+#include <QVector3D>
+
+/**
+ * Class to load .obj files.
+ */
 class ObjLoader {
 public:
     /**
      * Standard constructor.
      */
     ObjLoader();
+
+    /**
+     * Resets the currently held data in the loader to allow the loading of another
+     * .obj file.
+     */
+    void clear();
+
+    /**
+     * Gets an array of vertex coordinates and their matching normals, interleaved
+     * for use in OpenGL.
+     *
+     * @return the vertex information for this loaded .obj file.
+     * @throws range_error if the number of vertices and vertex normals are not the
+     *                     same.
+     */
+    float* getVertices(int &numAttr);
+
+    /**
+     * Gets an array of vertex indices.
+     *
+     * @return the vertex index information for this loaded .obj file.
+     * @throws range_error if an entry refers to an index that is greater than the
+     *                     size of vertices_.
+     */
+    int* getIndices(int &numAttr);
 
     /**
      * Attempts to process the file with the given path into the loader's memory.
@@ -28,32 +59,23 @@ private:
      * @throws bad_alloc if the function needs to allocate storage and fails.
      * @throws invalid_argument if the line only begins with "f" and contains
      *                          further invalid extra characters before the actual
-     *                          data; if it does not contain a minimum of three
-     *                          entries to constitute a face; if one of the "words"
-     *                          does not contain exactly one of the expected "//"
-     *                          delimiter; or if no integer conversion could be
-     *                          performed on one of the split segments of line.
+     *                          data; if it does not contain three entries to
+     *                          constitute a face; if one of the "words" does not
+     *                          contain exactly one of the expected "//" delimiter;
+     *                          or if no integer conversion could be performed on
+     *                          one of the split segments of line.
      * @throws out_of_range if one of the parsed values is out of the range of
      *                      representable values by an int.
      */
-    void processFaceLine(std::string line); // TODO: Change such that faces can only have three vertices?
+    void processFaceLine(std::string line);
 
     /**
      * Takes a line, and if valid, adds the corresponding parsed data to the
      * loader's memory.
      *
      * @param line The line to be processed and loaded, if valid.
-     * @throws bad_alloc if the function needs to allocate storage and fails.
-     * @throws invalid_argument if the line only begins with a valid character
-     *                          sequence and contains further invalid extra
-     *                          characters before the actual data; if it does not
-     *                          contain the correct or adequate number of entries
-     *                          for its corresponding data type; if one of the
-     *                          "words" do not satisfy constraints for that data
-     *                          type; or if no number conversion could be performed
-     *                          on one of the split tokens.
-     * @throws out_of_range if a parsed value is out of the range of representable
-     *                      values by the corresponding number type.
+     * @throws invalid_argument if the line is imparsable as a line of vertex,
+     *                          vertex normal, or face data.
      */
     void processLine(std::string line);
 
@@ -103,7 +125,7 @@ private:
      * @throws out_of_range if one of the parsed values is out of the range of
      *                      representable values by an int.
      */
-    std::pair<int, int> processVertexPair(std::string vertPair);
+    QPair<int, int> processVertexPair(std::string vertPair);
 
     /**
      * Splits a string into constituent pieces by the given delimiter.
@@ -112,10 +134,10 @@ private:
      * @param delim The delimiter to separate out the constituent pieces of line.
      * @return A vector containing the  pieces split apart from line.
      */
-    std::vector<std::string> split(std::string line, char delim);
+    QVector<std::string> split(std::string line, char delim);
 
     // Loaded data:
-    std::vector<std::vector<float>> vertices_;
-    std::vector<std::vector<float>> vertexNormals_;
-    std::vector<std::vector<std::pair<int, int>>> faces_;
-}
+    QVector<QVector3D> vertices_;
+    QVector<QVector3D> vertexNormals_;
+    QVector<QVector<QPair<int, int>>> faces_;
+};
