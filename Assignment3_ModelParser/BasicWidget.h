@@ -12,6 +12,17 @@ class BasicWidget : public QOpenGLWidget, protected QOpenGLFunctions
   Q_OBJECT
 
 private:
+  QMatrix4x4 projectionMatrix_;
+  QOpenGLShaderProgram shader_;
+  QOpenGLVertexArrayObject vao_;
+  QOpenGLBuffer vbo_;
+  QOpenGLBuffer ibo_;
+
+  
+  unsigned int modelPolyCount_;
+
+  void createShaderProgram();
+  void addArrayObject(std::string filePath);
 
 protected:
   // Required interaction overrides
