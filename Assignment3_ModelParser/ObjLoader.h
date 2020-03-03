@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 #include <QPair>
 #include <QVector>
 #include <QVector3D>
@@ -23,23 +21,19 @@ public:
     void clear();
 
     /**
-     * Gets an array of vertex coordinates and their matching normals, interleaved
-     * for use in OpenGL.
-     *
-     * @return the vertex information for this loaded .obj file.
-     * @throws range_error if the number of vertices and vertex normals are not the
-     *                     same.
+     * Gets the list of index information for this loaded .obj file.
      */
-    float* getVertices(int &numAttr);
+    QVector<unsigned int> getIndices();
 
     /**
-     * Gets an array of vertex indices.
-     *
-     * @return the vertex index information for this loaded .obj file.
-     * @throws range_error if an entry refers to an index that is greater than the
-     *                     size of vertices_.
+     * Gets the list of vertex information for this loaded .obj file.
      */
-    int* getIndices(int &numAttr);
+    QVector<QVector3D> getVertices();
+
+    /**
+     * Gets the list of vertex normal information for this loaded .obj file.
+     */
+    QVector<QVector3D> getVertexNormals();
 
     /**
      * Attempts to process the file with the given path into the loader's memory.

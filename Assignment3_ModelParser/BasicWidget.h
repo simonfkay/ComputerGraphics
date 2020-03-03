@@ -4,6 +4,8 @@
 #include <QtWidgets>
 #include <QtOpenGL>
 
+#include "Renderable.h"
+
 /**
  * This is just a basic OpenGL widget that will allow a change of background color.
  */
@@ -12,19 +14,18 @@ class BasicWidget : public QOpenGLWidget, protected QOpenGLFunctions
   Q_OBJECT
 
 private:
-  QMatrix4x4 modelMatrix_;
-  QMatrix4x4 viewMatrix_;
-  QMatrix4x4 projectionMatrix_;
-  QOpenGLShaderProgram shader_;
-  QOpenGLVertexArrayObject vao_;
-  QOpenGLBuffer vbo_;
-  QOpenGLBuffer ibo_;
-
+  QMatrix4x4 model_;
+  QMatrix4x4 view_;
+  QMatrix4x4 projection_;
   
-  unsigned int modelPolyCount_;
+  QElapsedTimer frameTimer_;
 
-  void createShaderProgram();
-  void addArrayObject(std::string filePath);
+  QVector<Renderable*> renderables_;
+
+  QOpenGLDebugLogger logger_;
+
+  bool wireframeMode_;
+  unsigned int modelSelectedIndex_;
 
 protected:
   // Required interaction overrides

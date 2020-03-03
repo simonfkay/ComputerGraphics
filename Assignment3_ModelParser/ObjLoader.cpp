@@ -26,63 +26,32 @@ void ObjLoader::clear() {
 }
 
 /**
- * Gets an array of vertex coordinates and their matching normals, interleaved
- * for use in OpenGL.
- *
- * @return the vertex information for this loaded .obj file.
- * @throws range_error if the number of vertices and vertex normals are not the
- *                     same.
+ * Gets the list of index information for this loaded .obj file.
  */
-float* ObjLoader::getVertices(int &numAttr) {
-    int numEntries = vertices_.size();
-
-    if (numEntries != vertexNormals_.size()) {
-        throw std::range_error("The number of vertices and vertex normals must be the same.");
-    }
-
-    int vertexSize = 3 + 3;
-    float* vertexInfo = new float[numEntries * vertexSize];
-
-    for (int ii = 0; ii < numEntries; ++ii) {
-        vertexInfo[ii * vertexSize + 0] = vertices_.at(ii).x();
-        vertexInfo[ii * vertexSize + 1] = vertices_.at(ii).y();
-        vertexInfo[ii * vertexSize + 2] = vertices_.at(ii).z();
-        vertexInfo[ii * vertexSize + 3] = vertexNormals_.at(ii).x();
-        vertexInfo[ii * vertexSize + 4] = vertexNormals_.at(ii).y();
-        vertexInfo[ii * vertexSize + 5] = vertexNormals_.at(ii).z();
-    }
-
-    numAttr = numEntries * vertexSize;
-    return vertexInfo;
-}
-
-/**
- * Gets an array of vertex indices.
- *
- * @return the vertex index information for this loaded .obj file.
- * @throws range_error if an entry refers to an index that is greater than the
- *                     size of vertices_.
- */
-int* ObjLoader::getIndices(int &numAttr) {
-    QVector<int> indices;
+QVector<unsigned int> ObjLoader::getIndices() {
+    QVector<unsigned int> indices = QVector<unsigned int>();
     for (QVector<QPair<int, int>> face : faces_) {
-        for (QPair<int, int> vertexPair : face) {
-            int index = vertexPair.first - 1;
-
-            if (index >= vertices_.size()) {
-                throw std::range_error("Vertex index list cannot reference a vertex without that index.");
-            }
-
+        for (int ii = 0; ii < face.size(); ++ii) {
+            QPair<int, int> indexPair = face.at(ii);
+            unsigned int index = indexPair.first;
             indices << index;
         }
     }
-    int* indexArray = new int[indices.size()];
-    for (int ii = 0; ii < indices.size(); ++ii) {
-        indexArray[ii] = indices[ii];
-    }
+    return indices;
+}
 
-    numAttr = indices.size();
-    return indexArray;
+/**
+ * Gets the list of vertex information for this loaded .obj file.
+ */
+QVector<QVector3D> ObjLoader::getVertices() {
+    return vertices_;
+}
+
+/**
+ * Gets the list of vertex normal information for this loaded .obj file.
+ */
+QVector<QVector3D> ObjLoader::getVertexNormals() {
+    return vertexNormals_;
 }
 
 /**

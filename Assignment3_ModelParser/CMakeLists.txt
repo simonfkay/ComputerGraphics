@@ -21,6 +21,7 @@ set(srcs
   Application.cpp
   main.cpp
   ObjLoader.cpp
+  Renderable.cpp
 )
 
 add_executable(Assignment

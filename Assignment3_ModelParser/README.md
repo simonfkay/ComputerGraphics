@@ -6,13 +6,11 @@
 
 * Name and partners name(At most 1 partner for this Assignment): 
 * How many hours did it take you to complete this Assignment?
-  * 4.5h + 6AM-
-* Did you collaborate or share ideas with any other students/TAs/Professors? 
+  * 7 hours
+* Did you collaborate or share ideas with any other students/TAs/Professors?
+  * No
 * Did you use any external resources? 
-  * (tbd if any)
-  * (tbd if any)
-  * (tbd if any)
-* (Optional) What was the most interesting part of the assignment? How would you improve this assignment?
+  * I based a lot of the code for this on Lab 7.
   
 ## Description
 
