@@ -12,6 +12,8 @@ class BasicWidget : public QOpenGLWidget, protected QOpenGLFunctions
   Q_OBJECT
 
 private:
+  QMatrix4x4 modelMatrix_;
+  QMatrix4x4 viewMatrix_;
   QMatrix4x4 projectionMatrix_;
   QOpenGLShaderProgram shader_;
   QOpenGLVertexArrayObject vao_;
