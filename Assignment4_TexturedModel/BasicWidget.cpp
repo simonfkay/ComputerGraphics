@@ -11,6 +11,7 @@ BasicWidget::BasicWidget(QWidget* parent) : QOpenGLWidget(parent)
 
 BasicWidget::~BasicWidget()
 {
+  makeCurrent();
   for (Renderable* renderable : renderables_) {
     delete renderable;
   }
@@ -75,7 +76,7 @@ void BasicWidget::resizeGL(int w, int h)
 {
   glViewport(0, 0, w, h);
   view_.setToIdentity();
-  view_.lookAt(QVector3D(0.0f, 0.0f, 2.0f),
+  view_.lookAt(QVector3D(0.0f, 0.0f, 4.0f),
       QVector3D(0.0f, 0.0f, 0.0f),
       QVector3D(0.0f, 1.0f, 0.0f));
   projection_.setToIdentity();
