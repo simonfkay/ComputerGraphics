@@ -3,7 +3,6 @@
 (The picture shows an example of success for this assignment)
 <img align="right" src="./media/house.jpg" width="400px" alt="picture">
 
-
 * Name and partners name (At most 1 partner for this Assignment): 
   * Simon Kay
 * How many hours did it take you to complete this Assignment?
@@ -13,7 +12,6 @@
 * Did you use any external resources? 
   * http://www.yolinux.com/TUTORIALS/C++Singleton.html
   * https://learnopengl.com/Advanced-OpenGL/Depth-testing
-
 * Program details:
   * The application can either be run with no command line argument, or a path to a .obj file.
   * The "w" and "q" keys behave as specified in the assignment.
