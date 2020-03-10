@@ -6,7 +6,7 @@
 #include <QtGui>
 #include <QtOpenGL>
 
-Renderable::Renderable() : vbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), texture_(QOpenGLTexture::Target2D), numTris_(0), rotationAxis_(0.0, 1.0, 0.0), rotationSpeed_(0.25)
+Renderable::Renderable() : vbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), texture_(QOpenGLTexture::Target2D), numTris_(0), rotationAxis_(0.0, 1.0, 0.0), rotationSpeed_(0.125)
 {
     rotationAngle_ = 0.0;
 }
@@ -47,14 +47,16 @@ void Renderable::createShaders()
 
 void Renderable::init(TranslatedObj* object)
 {
-    unsigned int numIndices = object->getNumIndices();
-    unsigned int numData = object->getNumData();
     float* data = object->getData();
     unsigned int* indices = object->getIndices();
+
+    unsigned int numData = object->getNumData();
+    unsigned int numIndices = object->getNumIndices();
+    
     unsigned int vertexSize = object->getVertexSize();
     QString diffuseMapPath = QString::fromStdString(object->getDiffuseMapPath());
 
-    texture_.setData(QImage(diffuseMapPath));
+    texture_.setData(QImage(diffuseMapPath).mirrored(true, true));
 
     // Set our model matrix to identity
     modelMatrix_.setToIdentity();

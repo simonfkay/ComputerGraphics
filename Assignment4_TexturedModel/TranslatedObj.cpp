@@ -146,9 +146,10 @@ QPair<QVector<IndexedVertex*>, QVector<unsigned int>> TranslatedObj::reorderVert
     QVector<IndexedVertex*> newOrdering;
     QVector<unsigned int> faceIndices;
 
-    for (const QVector<QPair<int, int>>& face : faces) {
-        for (unsigned int ii = 0; ii < face.size(); ++ii) {
-            QPair<int, int> vertexIndexPair = face.at(ii);
+    for (unsigned int ii = 0; ii < faces.size(); ++ii) {
+        QVector<QPair<int, int>> face = faces.at(ii);
+        for (unsigned int jj = 0; jj < face.size(); ++jj) {
+            QPair<int, int> vertexIndexPair = face.at(jj);
             int positionIndex = vertexIndexPair.first - 1;
             int textureIndex = vertexIndexPair.second - 1;
 
@@ -159,9 +160,6 @@ QPair<QVector<IndexedVertex*>, QVector<unsigned int>> TranslatedObj::reorderVert
                                             " or vertex texure coordinates"
                                             " in memory.");
             }
-
-
-
 
             // Check if vertex has already been added to the list
             IndexedVertex* nextVertex = (quickLookup[positionIndex])[textureIndex];

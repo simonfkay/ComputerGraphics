@@ -36,21 +36,7 @@ public:
      */
     TranslatedObj* translate();
 
-private:
-    /**
-     * Standard private constructor.
-     */
-    ObjLoader();
 
-    /**
-     * Private copy constructor to enforce singleton behavior.
-     */
-    ObjLoader(const ObjLoader&);
-
-    /**
-     * Private assignment operator to enforce singleton behavior.
-     */
-    ObjLoader& operator=(const ObjLoader&);
 
     /**
      * Gets the list of vertex position information for this loaded .obj file.
@@ -72,6 +58,24 @@ private:
      * .mtl file.
      */
     std::string getDiffuseMapPath();
+
+    
+
+private:
+    /**
+     * Standard private constructor.
+     */
+    ObjLoader();
+
+    /**
+     * Private copy constructor to enforce singleton behavior.
+     */
+    ObjLoader(const ObjLoader&);
+
+    /**
+     * Private assignment operator to enforce singleton behavior.
+     */
+    ObjLoader& operator=(const ObjLoader&);
 
     /**
      * Takes a face specification line, and if valid, adds the specified face

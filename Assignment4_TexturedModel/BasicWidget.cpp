@@ -66,7 +66,7 @@ void BasicWidget::initializeGL()
 
   wireframeMode_ = false;
   modelSelectedIndex_ = 0;
-  renderables_.push_back(Renderable::createFromFile("../objects/house/house_obj.obj"));
+  renderables_.push_back(Renderable::createFromFile("../objects/capsule/capsule.obj"));
 
   glViewport(0, 0, width(), height());
   frameTimer_.start();
@@ -87,12 +87,12 @@ void BasicWidget::resizeGL(int w, int h)
 void BasicWidget::paintGL()
 {
   qint64 msSinceRestart = frameTimer_.restart();
-  // std::cout << "Painting GL." << std::endl;
-  glDisable(GL_DEPTH_TEST);
+  glEnable(GL_DEPTH_TEST);
   glDisable(GL_CULL_FACE);
 
   glClearColor(0.f, 0.f, 0.f, 1.f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glDepthFunc(GL_LESS);
 
   if (wireframeMode_) {
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
