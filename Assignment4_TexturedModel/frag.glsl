@@ -1,7 +1,12 @@
 #version 330
 
-out vec4 color;
-void main()
-{
-  color = vec4(0.56862745f, 0.65882353f, 0.81960784f, 1.0f);
+in vec2 textureCoordinates;
+
+out vec4 fragmentColor;
+
+uniform sampler2D tex;
+
+void main() {
+  // Set our output fragment color to whatever we pull from our input texture (Note, change 'tex' to whatever the sampler is named)
+  fragmentColor = texture(tex, textureCoordinates);
 }

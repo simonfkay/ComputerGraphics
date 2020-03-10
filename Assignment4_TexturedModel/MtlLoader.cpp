@@ -71,7 +71,6 @@ void MtlLoader::processLine(const std::string& line) override {
     }
 }
 
-// TODO: Inside
 /**
  * Takes a diffuse map file name declaration line, and if valid, stores the
  * file path in the loader's memory.
@@ -99,10 +98,7 @@ void MtlLoader::processMapKdLine(const QVector<std::string>& splitLine) {
 
     std::ifstream ppmFile;
     ppmFile.open(filePathPrefix_ + filePath);
-    // TODO: Inside
     if (ppmFile.is_open()) {
-        // TODO: Figure out if anything needs to be done to load the .ppm, or
-        //       if only the file path is needed.
         diffuseMapPath_ = filePathPrefix_ + filePath;
         ppmFile.close();
     } else {

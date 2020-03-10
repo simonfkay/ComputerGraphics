@@ -7,13 +7,16 @@
 #include <QtGui>
 #include <QtOpenGL>
 
-Renderable::Renderable() : vbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), numTris_(0), rotationAxis_(0.0, 1.0, 0.0), rotationSpeed_(0.25)
+Renderable::Renderable() : vbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), texture_(QOpenGLTexture::Target2D), numTris_(0), rotationAxis_(0.0, 1.0, 0.0), rotationSpeed_(0.25)
 {
     rotationAngle_ = 0.0;
 }
 
 Renderable::~Renderable()
 {
+    if (texture_.isCreated()) {
+        texture_.destroy();
+    }
     if (vbo_.isCreated()) {
         vbo_.destroy();
     }
@@ -43,7 +46,6 @@ void Renderable::createShaders()
     }
 }
 
-// TODO: Inside
 void Renderable::init(TranslatedObj* object)
 {
     unsigned int numIndices = object->getNumIndices();
@@ -52,8 +54,9 @@ void Renderable::init(TranslatedObj* object)
     unsigned int* indices = object->getIndices();
     unsigned int vertexSize = object->getVertexSize();
     std::string diffuseMapPath = object->getDiffuseMapPath();
-    // TODO: Implement diffuse map texturing
-    
+
+    texture_.setData(QImage(diffuseMapPath));
+
     // Set our model matrix to identity
     modelMatrix_.setToIdentity();
 
@@ -123,7 +126,9 @@ void Renderable::draw(const QMatrix4x4& view, const QMatrix4x4& projection)
     shader_.setUniformValue("projectionMatrix", projection);
 
     vao_.bind();
+    texture_.bind();
     glDrawElements(GL_TRIANGLES, 3 * numTris_, GL_UNSIGNED_INT, 0);
+    texture_.release();
     vao_.release();
     shader_.release();
 }

@@ -4,13 +4,14 @@
 #include <QtGui>
 #include <QtOpenGL>
 
-// TODO: Inside (Fix next pass)
 class Renderable {
 protected:
     // Each renderable has its own model matrix
     QMatrix4x4 modelMatrix_;
     // For now, we have only one shader per object
     QOpenGLShaderProgram shader_;
+    // For now, we have only one texture per object
+    QOpenGLTexture texture_;
     // For now, we have a single unified buffer per object
     QOpenGLBuffer vbo_;
     // Make sure we have an index buffer.
@@ -28,12 +29,10 @@ protected:
     // Create our shader and fix it up
     void createShaders();
 
-// TODO: Below
 public:
     Renderable();
     virtual ~Renderable();
 
-    // TODO: See implementation
     virtual void init(const QVector<QVector3D>& positions, const QVector<QVector3D>& normals, const QVector<unsigned int>& indexes);
     virtual void update(const qint64 msSinceLastFrame);
     virtual void draw(const QMatrix4x4& view, const QMatrix4x4& projection);

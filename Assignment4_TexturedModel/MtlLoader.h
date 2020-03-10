@@ -2,7 +2,6 @@
 
 #include "FileLoader.h"
 
-// TODO: Inside (Fix next pass)
 /**
  * Class to load .mtl files.
  */
@@ -23,7 +22,6 @@ public:
      */
     std::string getDiffuseMapPath();
 
-// TODO: Below
 private:
     /**
      * Standard private constructor.
@@ -50,7 +48,6 @@ private:
      */
     void processLine(const std::string& line) override;
 
-    // TODO: See implementation
     /**
      * Takes a diffuse map file name declaration line, and if valid, stores the
      * file path in the loader's memory.
