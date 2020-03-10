@@ -13,9 +13,14 @@
 class ObjLoader : public FileLoader {
 public:
     /**
-     * Standard constructor.
+     * Method for singleton behavior.
      */
-    ObjLoader();
+    static ObjLoader* getInstance() override;
+
+    /**
+     * Clears the contents of this loader so that it can be used again.
+     */
+    void clear() override;
 
     /**
      * Translates the data of an already loaded .obj file to a format that can
@@ -32,6 +37,21 @@ public:
     TranslatedObj* translate();
 
 private:
+    /**
+     * Standard private constructor.
+     */
+    ObjLoader();
+
+    /**
+     * Private copy constructor to enforce singleton behavior.
+     */
+    ObjLoader(const ObjLoader& that);
+
+    /**
+     * Private assignment operator to enforce singleton behavior.
+     */
+    ObjLoader& operator=(const ObjLoader& that);
+
     /**
      * Gets the list of vertex position information for this loaded .obj file.
      */
@@ -143,4 +163,7 @@ private:
     QVector<QVector2D> textureCoordinates_;
     QVector<QVector<QPair<int, int>>> faces_;
     std::string diffuseMapPath_;
+
+    // Singleton loader instance:
+    static ObjLoader* loaderInstance_;
 };

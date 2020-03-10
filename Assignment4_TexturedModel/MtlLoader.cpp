@@ -4,10 +4,26 @@
 
 #include "MtlLoader.h"
 
+// Global static pointer used to ensure a single instance of the class.
+MtlLoader* MtlLoader::loaderInstance_ = NULL;
+
 /**
- * Standard constructor.
+ * Method for singleton behavior.
  */
-MtlLoader::MtlLoader() { }
+MtlLoader* MtlLoader::getInstance() {
+    if (!loaderInstance_) {
+        loaderInstance_ = new MtlLoader();
+    }
+    return loaderInstance_;
+}
+
+/**
+ * Clears the contents of this loader so that it can be used again.
+ */
+void ObjLoader::clear() override {
+    FileLoader::clear();
+    diffuseMapPath_ = "";
+}
 
 /**
  * Gets the path for the diffuse map specified in the loaded .mtl file.
@@ -15,6 +31,21 @@ MtlLoader::MtlLoader() { }
 std::string MtlLoader::getDiffuseMapPath() {
     return diffuseMapPath_;
 }
+
+/**
+ * Standard private constructor.
+ */
+MtlLoader::MtlLoader() { }
+
+/**
+ * Private copy constructor to enforce singleton behavior.
+ */
+MtlLoader(const MtlLoader& that) { }
+
+/**
+ * Private assignment operator to enforce singleton behavior.
+ */
+MtlLoader& operator=(const MtlLoader& that) { }
 
 /**
  * Takes a line, and if valid, adds the corresponding parsed data to the

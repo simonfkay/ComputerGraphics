@@ -3,10 +3,29 @@
 #include "MtlLoader.h"
 #include "ObjLoader.h"
 
+// Global static pointer used to ensure a single instance of the class.
+ObjLoader* ObjLoader::loaderInstance_ = NULL;
+
 /**
- * Standard constructor.
+ * Method for singleton behavior.
  */
-ObjLoader::ObjLoader() { }
+ObjLoader* ObjLoader::getInstance() {
+    if (!loaderInstance_) {
+        loaderInstance_ = new ObjLoader();
+    }
+    return loaderInstance_;
+}
+
+/**
+ * Clears the contents of this loader so that it can be used again.
+ */
+void ObjLoader::clear() {
+    FileLoader::clear();
+    positions_.clear();
+    textureCoordinates_.clear();
+    faces_.clear();
+    diffuseMapPath_ = "";
+}
 
 /**
  * Translates the data of an already loaded .obj file to a format that can be
@@ -26,6 +45,21 @@ TranslatedObj* ObjLoader::translate() {
     }
     return TranslatedObj::translate(getDiffuseMapPath(), getFaces(), getVertices(), getVertexTextures());
 }
+
+/**
+ * Standard private constructor.
+ */
+ObjLoader::ObjLoader() { }
+
+/**
+ * Private copy constructor to enforce singleton behavior.
+ */
+ObjLoader(const ObjLoader& that) { }
+
+/**
+ * Private assignment operator to enforce singleton behavior.
+ */
+ObjLoader& operator=(const ObjLoader& that) { }
 
 /**
  * Gets the list of vertex position information for this loaded .obj file.
@@ -135,15 +169,16 @@ void ObjLoader::processMtllibLine(const QVector<std::string>& splitLine) {
     }
 
     std::string mtlLibPath = splitLine.at(1);
-    MtlLoader mtlLoader;
+    MtlLoader* mtlLoader = MtlLoader::getInstance();
     try {
-        mtlLoader.loadFile(filePathPrefix_ + mtlLibPath);
+        mtlLoader->loadFile(filePathPrefix_ + mtlLibPath);
     } catch (std::exception& ex) {
         std::cout << std::endl << ex.what() << std::endl;
         throw std::invalid_argument("The referenced .mtl file cannot be "
                                     "loaded: " + mtlLibPath);
     }
-    diffuseMapPath_ = mtlLoader.getDiffuseMapPath();
+    diffuseMapPath_ = mtlLoader->getDiffuseMapPath();
+    mtlLoader->clear();
 }
 
 /**

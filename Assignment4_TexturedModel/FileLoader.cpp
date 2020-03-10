@@ -6,6 +6,14 @@
 #include "FileLoader.h"
 
 /**
+ * Clears the contents of this loader so that it can be used again.
+ */
+void FileLoader::clear() {
+    filePathPrefix_ = "";
+    loaded_ = false;
+}
+
+/**
  * Attempts to process the file with the given path into the loader's memory.
  *
  * @param filePath The path of the file to be loaded.

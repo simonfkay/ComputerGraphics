@@ -8,6 +8,16 @@
 class FileLoader {
 public:
     /**
+     * Abstract method for subclasses to override for singleton behavior.
+     */
+    virtual static FileLoader* getInstance() = 0;
+
+    /**
+     * Clears the contents of this loader so that it can be used again.
+     */
+    void clear();
+
+    /**
      * Attempts to process the file with the given path into the loader's memory.
      *
      * @param filePath The path of the file to be loaded.

@@ -145,9 +145,10 @@ void Renderable::setRotationSpeed(float speed)
 
 Renderable* Renderable::createFromFile(const std::string& filePath) {
     Renderable* renderable = new Renderable();
-    ObjLoader loader;
-    loader.loadFile(filePath);
-    TranslatedObj* object = loader.translate();
+    ObjLoader* loader = ObjLoader::getInstance();
+    loader->loadFile(filePath);
+    TranslatedObj* object = loader->translate();
+    loader->clear();
     renderable->init(object);
     return renderable;
 }

@@ -9,9 +9,14 @@
 class MtlLoader : public FileLoader {
 public:
     /**
-     * Standard constructor.
+     * Method for singleton behavior.
      */
-    MtlLoader();
+    static MtlLoader* getInstance() override;
+    
+    /**
+     * Clears the contents of this loader so that it can be used again.
+     */
+    void clear() override;
 
     /**
      * Gets the path for the diffuse map specified in the loaded .mtl file.
@@ -20,6 +25,21 @@ public:
 
 // TODO: Below
 private:
+    /**
+     * Standard private constructor.
+     */
+    MtlLoader();
+
+    /**
+     * Private copy constructor to enforce singleton behavior.
+     */
+    MtlLoader(const MtlLoader& that);
+
+    /**
+     * Private assignment operator to enforce singleton behavior.
+     */
+    MtlLoader& operator=(const MtlLoader& that);
+
     /**
      * Takes a line, and if valid, adds the corresponding parsed data to the
      * loader's memory.
@@ -46,4 +66,7 @@ private:
 
     // Loader data:
     std::string diffuseMapPath_;
+
+    // Singleton loader instance:
+    static ObjLoader* loaderInstance_;
 };
