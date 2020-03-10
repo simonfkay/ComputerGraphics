@@ -1,14 +1,16 @@
+
 #include "Application.h"
 
 #include "BasicWidget.h"
 
-Application::Application(QWidget* parent) : QMainWindow(parent)
+Application::Application(QWidget* parent, std::string input) : QMainWindow(parent), input_(input)
 {
   buildGui();
 }
 
 Application::~Application()
 {}
+
 
 void Application::buildGui()
 {
@@ -18,6 +20,6 @@ void Application::buildGui()
   QAction* exit = file->addAction("Quit", [this]() {close();});
 
   // Our basic widget.
-  BasicWidget* widget = new BasicWidget(this);
+  BasicWidget* widget = new BasicWidget(this, input_);
   setCentralWidget(widget);
 }

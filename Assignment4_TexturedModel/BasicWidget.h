@@ -27,6 +27,9 @@ private:
   bool wireframeMode_;
   unsigned int modelSelectedIndex_;
 
+  std::string input_;
+  bool customInput_ = false;
+
 protected:
   // Required interaction overrides
   void keyReleaseEvent(QKeyEvent* keyEvent) override;
@@ -37,7 +40,7 @@ protected:
   void paintGL() override;
 
 public:
-  BasicWidget(QWidget* parent=nullptr);
+  BasicWidget(QWidget* parent=nullptr, std::string input="");
   virtual ~BasicWidget();
   
   // Make sure we have some size that makes sense.

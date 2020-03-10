@@ -4,16 +4,21 @@
 <img align="right" src="./media/house.jpg" width="400px" alt="picture">
 
 
-*TODO*: Please edit the following information in your assignment
-
 * Name and partners name (At most 1 partner for this Assignment): 
   * Simon Kay
 * How many hours did it take you to complete this Assignment?
-  * 12h + 7:15 AM -
+  * 12.5h
 * Did you collaborate or share ideas with any other students/TAs/Professors? 
-  * [TODO]
+  * N/A
 * Did you use any external resources? 
   * http://www.yolinux.com/TUTORIALS/C++Singleton.html
+  * https://learnopengl.com/Advanced-OpenGL/Depth-testing
+
+* Program details:
+  * The application can either be run with no command line argument, or a path to a .obj file.
+  * The "w" and "q" keys behave as specified in the assignment.
+  * When no custom input is given, the four default models can be switched between with the numbers 1-4.
+  * When custom input is given, it takes the place of 1, and the other four are moved up one (so it will then accept keyboard inputs 1-5).
 
 ## Description
 

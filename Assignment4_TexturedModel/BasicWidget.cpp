@@ -4,7 +4,7 @@
 
 //////////////////////////////////////////////////////////////////////
 // Publics
-BasicWidget::BasicWidget(QWidget* parent) : QOpenGLWidget(parent)
+BasicWidget::BasicWidget(QWidget* parent, std::string input) : QOpenGLWidget(parent), input_(input)
 {
   setFocusPolicy(Qt::StrongFocus);
 }
@@ -17,6 +17,7 @@ BasicWidget::~BasicWidget()
   }
   renderables_.clear();
 }
+
 
 //////////////////////////////////////////////////////////////////////
 // Privates
@@ -41,7 +42,24 @@ void BasicWidget::keyReleaseEvent(QKeyEvent* keyEvent)
     break;
   case Qt::Key_2:
     qDebug() << "2 key pressed.";
-    // modelSelectedIndex_ = 1; TODO: Add multiple objects to load
+    modelSelectedIndex_ = 1;
+    update();
+    break;
+  case Qt::Key_3:
+    qDebug() << "3 key pressed.";
+    modelSelectedIndex_ = 2;
+    update();
+    break;
+  case Qt::Key_4:
+    qDebug() << "4 key pressed.";
+    modelSelectedIndex_ = 3;
+    update();
+    break;
+  case Qt::Key_5:
+    qDebug() << "5 key pressed.";
+    if (customInput_) {
+      modelSelectedIndex_ = 4;
+    }
     update();
     break;
   default:
@@ -66,7 +84,16 @@ void BasicWidget::initializeGL()
 
   wireframeMode_ = false;
   modelSelectedIndex_ = 0;
+
+  if (input_ != "") {
+    customInput_ = true;
+    renderables_.push_back(Renderable::createFromFile(input_));
+  }
+  renderables_.push_back(Renderable::createFromFile("../objects/house/house_obj.obj"));
+  renderables_.push_back(Renderable::createFromFile("../objects/windmill/windmill.obj"));
+  renderables_.push_back(Renderable::createFromFile("../objects/chapel/chapel_obj.obj"));
   renderables_.push_back(Renderable::createFromFile("../objects/capsule/capsule.obj"));
+
 
   glViewport(0, 0, width(), height());
   frameTimer_.start();
