@@ -2,6 +2,7 @@
 
 #include "FileLoader.h"
 
+// TODO: Inside (Fix next pass)
 /**
  * Class to load .mtl files.
  */
@@ -17,6 +18,7 @@ public:
      */
     std::string getDiffuseMapPath();
 
+// TODO: Below
 private:
     /**
      * Takes a line, and if valid, adds the corresponding parsed data to the
@@ -26,8 +28,9 @@ private:
      * @throws invalid_argument if the line is imparsarsable as a diffuse map file
      *                          name declaration.
      */
-    void processLine(std::string line);
+    void processLine(const std::string& line) override;
 
+    // TODO: See implementation
     /**
      * Takes a diffuse map file name declaration line, and if valid, stores the
      * file path in the loader's memory.
@@ -39,8 +42,8 @@ private:
      *                          the specified file name is not a .ppm file; or if
      *                          the file at the given path simply cannot be opened.
      */
-    void processMapKdLine(QVector<std::string> splitLine);
+    void processMapKdLine(const QVector<std::string>& splitLine);
 
-    // Loaded data:
+    // Loader data:
     std::string diffuseMapPath_;
 };

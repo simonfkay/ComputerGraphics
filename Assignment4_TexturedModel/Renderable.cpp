@@ -1,12 +1,13 @@
 #include "Renderable.h"
 #include "ObjLoader.h"
+#include "TranslatedObj.h"
 
 #include <iostream>
 
 #include <QtGui>
 #include <QtOpenGL>
 
-Renderable::Renderable() : vbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), numTris_(0), vertexSize_(0), rotationAxis_(0.0, 1.0, 0.0), rotationSpeed_(0.25)
+Renderable::Renderable() : vbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), numTris_(0), rotationAxis_(0.0, 1.0, 0.0), rotationSpeed_(0.25)
 {
     rotationAngle_ = 0.0;
 }
@@ -42,26 +43,25 @@ void Renderable::createShaders()
     }
 }
 
-void Renderable::init(const QVector<QVector3D>& positions, const QVector<QVector3D>& normals, const QVector<unsigned int>& indexes)
+// TODO: Inside
+void Renderable::init(TranslatedObj* object)
 {
-    // NOTE:  We do not currently do anything with normals -- we just
-    // have it here for a later implementation!
-    // We need to make sure our sizes all work out ok.
-    // if (positions.size() != normals.size()) {
-    //     qDebug() << "[Renderable]::init() -- positions size mismatch with normal coordinates";
-    //     return;
-    // }
-
+    unsigned int numIndices = object->getNumIndices();
+    unsigned int numData = object->getNumData();
+    float* data = object->getData();
+    unsigned int* indices = object->getIndices();
+    unsigned int vertexSize = object->getVertexSize();
+    std::string diffuseMapPath = object->getDiffuseMapPath();
+    // TODO: Implement diffuse map texturing
+    
     // Set our model matrix to identity
     modelMatrix_.setToIdentity();
 
     // Set our number of trianges.
-    numTris_ = indexes.size() / 3;
+    numTris_ = numIndices / 3;
 
     // num verts (used to size our vbo)
-    int numVerts = positions.size();
-    vertexSize_ = 3;  // Position + texCoord
-    int numVBOEntries = numVerts * vertexSize_;
+    int numVerts = numData / vertexSize;
 
     // Setup our shader.
     createShaders();
@@ -73,36 +73,27 @@ void Renderable::init(const QVector<QVector3D>& positions, const QVector<QVector
     vbo_.create();
     vbo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
     vbo_.bind();
-    // Create a temporary data array
-    float* data = new float[numVBOEntries];
-    for (int ii = 0; ii < numVerts; ++ii) {
-        data[ii * vertexSize_ + 0] = positions.at(ii).x();
-        data[ii * vertexSize_ + 1] = positions.at(ii).y();
-        data[ii * vertexSize_ + 2] = positions.at(ii).z();
-    }
-    vbo_.allocate(data, numVBOEntries * sizeof(float));
-    delete[] data;
+    vbo_.allocate(data, numData * sizeof(float));
 
     // Create our index buffer
     ibo_.create();
     ibo_.bind();
     ibo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
     // create a temporary array for our indexes
-    unsigned int* idxAr = new unsigned int[indexes.size()];
-    for (int i = 0; i < indexes.size(); ++i) {
-        idxAr[i] = indexes.at(i) - 1;
-    }
-    ibo_.allocate(idxAr, indexes.size() * sizeof(unsigned int));
-    delete[] idxAr;
+    ibo_.allocate(indices, numIndices * sizeof(unsigned int));
 
     // Make sure we setup our shader inputs properly
     shader_.enableAttributeArray(0);
-    shader_.setAttributeBuffer(0, GL_FLOAT, 0, 3, vertexSize_ * sizeof(float));
+    shader_.setAttributeBuffer(0, GL_FLOAT, 0, 3, vertexSize * sizeof(float));
+    shader_.enableAttributeArray(1);
+    shader_.setAttributeBuffer(1, GL_FLOAT, 3 * sizeof(float), 2, vertexSize * sizeof(float));
 
     // Release our vao and THEN release our buffers.
     vao_.release();
     vbo_.release();
     ibo_.release();
+
+    delete object;
 }
 
 void Renderable::update(const qint64 msSinceLastFrame)
@@ -152,10 +143,11 @@ void Renderable::setRotationSpeed(float speed)
     rotationSpeed_ = speed;
 }
 
-Renderable* Renderable::createFromFile(std::string filePath) {
+Renderable* Renderable::createFromFile(const std::string& filePath) {
     Renderable* renderable = new Renderable();
     ObjLoader loader;
     loader.loadFile(filePath);
-    renderable->init(loader.getVertices(), loader.getVertexNormals(), loader.getIndices());
+    TranslatedObj* object = loader.translate();
+    renderable->init(object);
     return renderable;
 }

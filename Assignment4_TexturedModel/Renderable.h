@@ -4,6 +4,7 @@
 #include <QtGui>
 #include <QtOpenGL>
 
+// TODO: Inside (Fix next pass)
 class Renderable {
 protected:
     // Each renderable has its own model matrix
@@ -18,7 +19,6 @@ protected:
     QOpenGLVertexArrayObject vao_;
     // Keep track of how many triangles we actually have to draw in our ibo
     unsigned int numTris_;
-    int vertexSize_;
 
     // Define our axis of rotation for animation
     QVector3D rotationAxis_;
@@ -28,14 +28,12 @@ protected:
     // Create our shader and fix it up
     void createShaders();
 
+// TODO: Below
 public:
     Renderable();
     virtual ~Renderable();
 
-    // When we initialize our renderable, we pass it normals.  We 
-    // currently don't use normals in our implementation, but the array is checked
-    // for the appropriate size.  The values can be all 0, but must be the same size as
-    // the position array!
+    // TODO: See implementation
     virtual void init(const QVector<QVector3D>& positions, const QVector<QVector3D>& normals, const QVector<unsigned int>& indexes);
     virtual void update(const qint64 msSinceLastFrame);
     virtual void draw(const QMatrix4x4& view, const QMatrix4x4& projection);
@@ -44,7 +42,7 @@ public:
     void setRotationAxis(const QVector3D& axis);
     void setRotationSpeed(float speed);
 
-    static Renderable* createFromFile(std::string fileName);
+    static Renderable* createFromFile(const std::string& filePath);
 
 private:
 

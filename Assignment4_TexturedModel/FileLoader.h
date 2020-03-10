@@ -15,7 +15,7 @@ public:
      *                          cannot be fully loaded, or if the file simply
      *                          cannot be opened.
      */
-    void loadFile(std::string filePath);
+    void loadFile(const std::string& filePath);
 
     /**
      * Splits a string into constituent pieces by the given delimiter.
@@ -24,22 +24,23 @@ public:
      * @param delim The delimiter to separate out the constituent pieces of line.
      * @return A vector containing the  pieces split apart from line.
      */
-    QVector<std::string> split(std::string line, char delim);
+    QVector<std::string> split(const std::string& line, char delim);
 
 private:
     /**
      * Takes a line, and if valid, adds the corresponding parsed data to the
      * loader's memory. Must be overridden in a subclass.
      */
-    virtual void processLine(std::string line) = 0;
+    virtual void processLine(const std::string& line) = 0;
 
     /**
      * Parses the given path to determine the directory in which the file sits.
      *
      * @param filePath The path of the file to be loaded.
      */
-    void initFilePathPrefix(std::string filePath);
+    void initFilePathPrefix(const std::string& filePath);
 
+    // Loader data:
     std::string filePathPrefix_;
-
+    bool loaded_ = false;
 };

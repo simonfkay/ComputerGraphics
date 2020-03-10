@@ -1,3 +1,5 @@
+#include <fstream>
+#include <iostream>
 #include <stdexcept>
 
 #include "MtlLoader.h"
@@ -22,15 +24,13 @@ std::string MtlLoader::getDiffuseMapPath() {
  * @throws invalid_argument if the line is imparsarsable as a diffuse map file
  *                          name declaration.
  */
-void MtlLoader::processLine(std::string line) override {
+void MtlLoader::processLine(const std::string& line) override {
     QVector<std::string> splitLine = split(line, " ");
     try {
         if (splitLine.size() > 0) {
-            std::string lineType = splitLine[0];
+            std::string lineType = splitLine.at(0);
             if (lineType == "map_Kd") {
                 MtlLoader::processMapKdLine(splitLine);
-            } else {
-                // Ignore any irrellevant lines
             }
         }
     } catch (std::exception& ex) {
@@ -40,6 +40,7 @@ void MtlLoader::processLine(std::string line) override {
     }
 }
 
+// TODO: Inside
 /**
  * Takes a diffuse map file name declaration line, and if valid, stores the
  * file path in the loader's memory.
@@ -51,13 +52,13 @@ void MtlLoader::processLine(std::string line) override {
  *                          the specified file name is not a .ppm file; or if
  *                          the file at the given path simply cannot be opened.
  */
-void MtlLoader::processMapKdLine(QVector<std::string> splitLine) {
+void MtlLoader::processMapKdLine(const QVector<std::string>& splitLine) {
     if (splitLine.size() != 2) {
         throw std::invalid_argument("Line does not contain a proper diffuse "
                                     "map file name declaration.");
     }
 
-    std::string diffuseMapPath = splitLine[1];
+    std::string diffuseMapPath = splitLine.at(1);
     int pathStringLength = diffuseMapPath.size();
     if (pathStringLength < 4 ||
         diffuseMapPath.substr(pathStringLength - 4, pathStringLength) != ".ppm") {
@@ -67,7 +68,10 @@ void MtlLoader::processMapKdLine(QVector<std::string> splitLine) {
 
     std::ifstream ppmFile;
     ppmFile.open(filePathPrefix_ + filePath);
+    // TODO: Inside
     if (ppmFile.is_open()) {
+        // TODO: Figure out if anything needs to be done to load the .ppm, or
+        //       if only the file path is needed.
         diffuseMapPath_ = filePathPrefix_ + filePath;
         ppmFile.close();
     } else {

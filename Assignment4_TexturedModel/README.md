@@ -9,7 +9,7 @@
 * Name and partners name (At most 1 partner for this Assignment): 
   * Simon Kay
 * How many hours did it take you to complete this Assignment?
-  * 4h + 11:15 PM -
+  * 9:15h + 4:30 AM - 
 * Did you collaborate or share ideas with any other students/TAs/Professors? 
   * [TODO]
 * Did you use any external resources? 

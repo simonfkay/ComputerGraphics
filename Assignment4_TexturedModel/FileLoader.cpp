@@ -3,8 +3,6 @@
 #include <sstream>
 #include <stdexcept>
 
-#include <QVector>
-
 #include "FileLoader.h"
 
 /**
@@ -15,7 +13,7 @@
  *                          cannot be fully loaded, or if the file simply
  *                          cannot be opened.
  */
-void FileLoader::loadFile(std::string filePath) {
+void FileLoader::loadFile(const std::string& filePath) {
     FileLoader::initFilePathPrefix(filePath);
 
     std::ifstream file;
@@ -34,6 +32,7 @@ void FileLoader::loadFile(std::string filePath) {
         }
 
         file.close();
+        loaded_ = true;
     } else {
         throw std::invalid_argument("Unable to open file at: " + filePath);
     }
@@ -46,7 +45,7 @@ void FileLoader::loadFile(std::string filePath) {
  * @param delim The delimiter to separate out the constituent pieces of line.
  * @return A vector containing the  pieces split apart from line.
  */
-QVector<std::string> FileLoader::split(std::string line, char delim) {
+QVector<std::string> FileLoader::split(const std::string& line, char delim) {
     QVector<std::string> splitLine;
     std::stringstream stream(line);
     std::string item;
@@ -63,7 +62,7 @@ QVector<std::string> FileLoader::split(std::string line, char delim) {
  *
  * @param filePath The path of the file to be loaded.
  */
-void FileLoader::initFilePathPrefix(std::string filePath) {
+void FileLoader::initFilePathPrefix(const std::string& filePath) {
     QVector<std::string> filePathSplit = FileLoader::split(filePath, "/");
     std::string fileName = filePathSplit.at(filePathSplit.size() - 1);
     size_t fileNameLoc = filePath.rfind(fileName);

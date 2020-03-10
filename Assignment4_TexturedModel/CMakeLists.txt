@@ -24,6 +24,7 @@ set(srcs
   MtlLoader.cpp
   ObjLoader.cpp
   Renderable.cpp
+  TranslatedObj.cpp
 )
 
 add_executable(App
