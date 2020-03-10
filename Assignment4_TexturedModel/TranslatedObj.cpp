@@ -149,8 +149,8 @@ QPair<QVector<IndexedVertex*>, QVector<unsigned int>> TranslatedObj::reorderVert
     for (const QVector<QPair<int, int>>& face : faces) {
         for (unsigned int ii = 0; ii < face.size(); ++ii) {
             QPair<int, int> vertexIndexPair = face.at(ii);
-            int positionIndex = vertexIndexPair.first;
-            int textureIndex = vertexIndexPair.second;
+            int positionIndex = vertexIndexPair.first - 1;
+            int textureIndex = vertexIndexPair.second - 1;
 
             if (positionIndex >= positions.size() ||
                 textureIndex >= textureCoordinates.size()) {
@@ -160,15 +160,18 @@ QPair<QVector<IndexedVertex*>, QVector<unsigned int>> TranslatedObj::reorderVert
                                             " in memory.");
             }
 
+
+
+
             // Check if vertex has already been added to the list
-            IndexedVertex* nextVertex = quickLookup.at(positionIndex).at(textureIndex);
+            IndexedVertex* nextVertex = (quickLookup[positionIndex])[textureIndex];
 
             // If not, then construct the specified vertex and add it to voth newOrdering and quickLookup
             if (!nextVertex) {
                 QVector3D position = positions.at(positionIndex);
                 QVector2D textureCoordinatePair = textureCoordinates.at(textureIndex);
                 nextVertex = new IndexedVertex(position, textureCoordinatePair, positionIndex, textureIndex, newOrdering.size());
-                quickLookup.at(positionIndex).emplace(textureIndex, nextVertex);
+                quickLookup[positionIndex].emplace(textureIndex, nextVertex);
                 newOrdering.append(nextVertex);
             }
 
