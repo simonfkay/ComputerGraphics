@@ -1,3 +1,4 @@
+#include <iostream>
 #include <stdexcept>
 
 #include "MtlLoader.h"
@@ -33,7 +34,7 @@ void ObjLoader::clear() {
  * 
  * @return A pointer to an object containing the translated .obj data for use
  *         with OpenGL.
- * @throws exception if this method is being called before a file has been
+ * @throws runtimeError if this method is being called before a file has been
  *                   loaded.
  * @throws invalid_argument if an index pair in one of the given faces lies
  *                          outside the bounds of either positions or
@@ -41,9 +42,9 @@ void ObjLoader::clear() {
  */
 TranslatedObj* ObjLoader::translate() {
     if (!loaded_) {
-        throw std::exception("Cannot translate an unloaded .obj file.");
+        throw std::runtime_error("Cannot translate an unloaded .obj file.");
     }
-    return TranslatedObj::translate(getDiffuseMapPath(), getFaces(), getVertices(), getVertexTextures());
+    return TranslatedObj::translate(getPositions(), getTextureCoordinates(), getFaces(), getDiffuseMapPath());
 }
 
 /**
@@ -54,12 +55,12 @@ ObjLoader::ObjLoader() { }
 /**
  * Private copy constructor to enforce singleton behavior.
  */
-ObjLoader(const ObjLoader& that) { }
+ObjLoader::ObjLoader(const ObjLoader&) { }
 
 /**
  * Private assignment operator to enforce singleton behavior.
  */
-ObjLoader& operator=(const ObjLoader& that) { }
+ObjLoader& ObjLoader::operator=(const ObjLoader&) { }
 
 /**
  * Gets the list of vertex position information for this loaded .obj file.
@@ -112,7 +113,7 @@ void ObjLoader::processFaceLine(const QVector<std::string>& splitLine) {
     try {
         QVector<QPair<int, int>> face;
         for (; ii < splitLine.size(); ++ii) {
-            face.append(ObjLoader::processVertexPair(splitLine.at(ii)));
+            face.append(ObjLoader::processVertexIndices(splitLine.at(ii)));
         }
         faces_.append(face);
     } catch (std::exception& ex) {
@@ -131,8 +132,8 @@ void ObjLoader::processFaceLine(const QVector<std::string>& splitLine) {
  * @throws invalid_argument if the line is imparsable as a line of vertex,
  *                          vertex normal, or face data.
  */
-void ObjLoader::processLine(const std::string& line) override {
-    QVector<std::string> splitLine = split(line, " ");
+void ObjLoader::processLine(const std::string& line) {
+    QVector<std::string> splitLine = split(line, ' ');
     try {
         if (splitLine.size() > 0) {
             std::string lineType = splitLine.at(0);
@@ -263,7 +264,7 @@ void ObjLoader::processTextureCoordinateLine(const QVector<std::string>& splitLi
  *                      representable values by an int.
  */
 QPair<int, int> ObjLoader::processVertexIndices(const std::string& vertexIndices) {
-    QVector<std::string> splitIndices = split(vertexIndices, "/");
+    QVector<std::string> splitIndices = FileLoader::split(vertexIndices, '/');
 
     if (splitIndices.size() != 3) {
         throw std::invalid_argument("Vertex index specification does not "
@@ -271,6 +272,7 @@ QPair<int, int> ObjLoader::processVertexIndices(const std::string& vertexIndices
                                     "associated vertex, vertex texture, and "
                                     "vertex normal index (the last of which "
                                     "can be empty).");
+    }
     
     std::string vStr = splitIndices.at(0);
     std::string vtStr = splitIndices.at(1);

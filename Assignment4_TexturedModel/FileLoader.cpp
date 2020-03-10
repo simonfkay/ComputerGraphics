@@ -31,7 +31,7 @@ void FileLoader::loadFile(const std::string& filePath) {
 
         while (getline(file, line)) {
             try {
-                ObjLoader::processLine(line);
+                processLine(line);
             } catch (std::exception& ex) {
                 std::cout << std::endl << ex.what() << std::endl;
                 throw std::invalid_argument("The given file path contains malformed"
@@ -71,7 +71,7 @@ QVector<std::string> FileLoader::split(const std::string& line, char delim) {
  * @param filePath The path of the file to be loaded.
  */
 void FileLoader::initFilePathPrefix(const std::string& filePath) {
-    QVector<std::string> filePathSplit = FileLoader::split(filePath, "/");
+    QVector<std::string> filePathSplit = FileLoader::split(filePath, '/');
     std::string fileName = filePathSplit.at(filePathSplit.size() - 1);
     size_t fileNameLoc = filePath.rfind(fileName);
     filePathPrefix_ = filePath.substr(0, fileNameLoc);

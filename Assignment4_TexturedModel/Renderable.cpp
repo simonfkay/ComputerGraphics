@@ -1,6 +1,5 @@
 #include "Renderable.h"
 #include "ObjLoader.h"
-#include "TranslatedObj.h"
 
 #include <iostream>
 
@@ -53,7 +52,7 @@ void Renderable::init(TranslatedObj* object)
     float* data = object->getData();
     unsigned int* indices = object->getIndices();
     unsigned int vertexSize = object->getVertexSize();
-    std::string diffuseMapPath = object->getDiffuseMapPath();
+    QString diffuseMapPath = QString::fromStdString(object->getDiffuseMapPath());
 
     texture_.setData(QImage(diffuseMapPath));
 

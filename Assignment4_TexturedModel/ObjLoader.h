@@ -15,12 +15,12 @@ public:
     /**
      * Method for singleton behavior.
      */
-    static ObjLoader* getInstance() override;
+    static ObjLoader* getInstance();
 
     /**
      * Clears the contents of this loader so that it can be used again.
      */
-    void clear() override;
+    virtual void clear() override;
 
     /**
      * Translates the data of an already loaded .obj file to a format that can
@@ -45,12 +45,12 @@ private:
     /**
      * Private copy constructor to enforce singleton behavior.
      */
-    ObjLoader(const ObjLoader& that);
+    ObjLoader(const ObjLoader&);
 
     /**
      * Private assignment operator to enforce singleton behavior.
      */
-    ObjLoader& operator=(const ObjLoader& that);
+    ObjLoader& operator=(const ObjLoader&);
 
     /**
      * Gets the list of vertex position information for this loaded .obj file.
@@ -94,7 +94,7 @@ private:
      * @throws invalid_argument if the line is imparsable as a line of vertex,
      *                          vertex normal, or face data.
      */
-    void processLine(const std::string& line) override;
+    virtual void processLine(const std::string& line) override;
 
     /**
      * Takes a material library specification line, and if valid, loads the

@@ -10,12 +10,12 @@ public:
     /**
      * Method for singleton behavior.
      */
-    static MtlLoader* getInstance() override;
+    static MtlLoader* getInstance();
     
     /**
      * Clears the contents of this loader so that it can be used again.
      */
-    void clear() override;
+    virtual void clear() override;
 
     /**
      * Gets the path for the diffuse map specified in the loaded .mtl file.
@@ -31,12 +31,12 @@ private:
     /**
      * Private copy constructor to enforce singleton behavior.
      */
-    MtlLoader(const MtlLoader& that);
+    MtlLoader(const MtlLoader&);
 
     /**
      * Private assignment operator to enforce singleton behavior.
      */
-    MtlLoader& operator=(const MtlLoader& that);
+    MtlLoader& operator=(const MtlLoader&);
 
     /**
      * Takes a line, and if valid, adds the corresponding parsed data to the
@@ -46,7 +46,7 @@ private:
      * @throws invalid_argument if the line is imparsarsable as a diffuse map file
      *                          name declaration.
      */
-    void processLine(const std::string& line) override;
+    virtual void processLine(const std::string& line) override;
 
     /**
      * Takes a diffuse map file name declaration line, and if valid, stores the
@@ -65,5 +65,5 @@ private:
     std::string diffuseMapPath_;
 
     // Singleton loader instance:
-    static ObjLoader* loaderInstance_;
+    static MtlLoader* loaderInstance_;
 };

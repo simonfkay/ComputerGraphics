@@ -1,6 +1,5 @@
 #include <map>
 
-#include "IndexedVertex.h"
 #include "TranslatedObj.h"
 
 /**
@@ -76,8 +75,8 @@ std::string TranslatedObj::getDiffuseMapPath() {
 TranslatedObj* TranslatedObj::translate(const QVector<QVector3D>& positions, const QVector<QVector2D>& textureCoordinates, const QVector<QVector<QPair<int, int>>>& faces, const std::string& diffuseMapPath) {
     // Reorder vertex data to make sense for OpenGL
     QPair<QVector<IndexedVertex*>, QVector<unsigned int>> reorderedVertexData = TranslatedObj::reorderVertexData(positions, textureCoordinates, faces);
-    QVector<IndexedVertex*> indexedVertices = reorderedVertices.first;
-    QVector<unsigned int> faceIndices = reorderedVertices.second;
+    QVector<IndexedVertex*> indexedVertices = reorderedVertexData.first;
+    QVector<unsigned int> faceIndices = reorderedVertexData.second;
 
     // Initialize constants
     unsigned int numIndexedVertices = indexedVertices.size();
@@ -142,7 +141,7 @@ TranslatedObj::TranslatedObj(float* data,
  *                          outside the bounds of either positions or
  *                          textureCoordinates.
  */
-QPair<QVector<IndexedVertex*>, QVector<unsigned int>> TranslatedObject::reorderVertexData(const QVector<QVector3D>& positions, const QVector<QVector2D>& textureCoordinates, const QVector<QVector<QPair<int, int>>>& faces) {
+QPair<QVector<IndexedVertex*>, QVector<unsigned int>> TranslatedObj::reorderVertexData(const QVector<QVector3D>& positions, const QVector<QVector2D>& textureCoordinates, const QVector<QVector<QPair<int, int>>>& faces) {
     std::map<unsigned int, std::map<unsigned int, IndexedVertex*>> quickLookup;
     QVector<IndexedVertex*> newOrdering;
     QVector<unsigned int> faceIndices;
@@ -174,7 +173,7 @@ QPair<QVector<IndexedVertex*>, QVector<unsigned int>> TranslatedObject::reorderV
             }
 
             // Add the new index of the vertex, which either was looked up or just constructed
-            faceIndices.append(nextVertex.newIndex_);
+            faceIndices.append(nextVertex->newIndex_);
         }
     }
 

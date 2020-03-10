@@ -20,7 +20,7 @@ MtlLoader* MtlLoader::getInstance() {
 /**
  * Clears the contents of this loader so that it can be used again.
  */
-void ObjLoader::clear() override {
+void MtlLoader::clear() {
     FileLoader::clear();
     diffuseMapPath_ = "";
 }
@@ -40,12 +40,12 @@ MtlLoader::MtlLoader() { }
 /**
  * Private copy constructor to enforce singleton behavior.
  */
-MtlLoader(const MtlLoader& that) { }
+MtlLoader::MtlLoader(const MtlLoader&) { }
 
 /**
  * Private assignment operator to enforce singleton behavior.
  */
-MtlLoader& operator=(const MtlLoader& that) { }
+MtlLoader& MtlLoader::operator=(const MtlLoader&) { }
 
 /**
  * Takes a line, and if valid, adds the corresponding parsed data to the
@@ -55,8 +55,8 @@ MtlLoader& operator=(const MtlLoader& that) { }
  * @throws invalid_argument if the line is imparsarsable as a diffuse map file
  *                          name declaration.
  */
-void MtlLoader::processLine(const std::string& line) override {
-    QVector<std::string> splitLine = split(line, " ");
+void MtlLoader::processLine(const std::string& line) {
+    QVector<std::string> splitLine = split(line, ' ');
     try {
         if (splitLine.size() > 0) {
             std::string lineType = splitLine.at(0);
@@ -97,11 +97,11 @@ void MtlLoader::processMapKdLine(const QVector<std::string>& splitLine) {
     }
 
     std::ifstream ppmFile;
-    ppmFile.open(filePathPrefix_ + filePath);
+    ppmFile.open(filePathPrefix_ + diffuseMapPath);
     if (ppmFile.is_open()) {
-        diffuseMapPath_ = filePathPrefix_ + filePath;
+        diffuseMapPath_ = filePathPrefix_ + diffuseMapPath;
         ppmFile.close();
     } else {
-        throw std::invalid_argument("Unable to open file at: " + filePath);
+        throw std::invalid_argument("Unable to open file at: " + diffuseMapPath);
     }
 }

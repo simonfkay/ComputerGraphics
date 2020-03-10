@@ -8,14 +8,9 @@
 class FileLoader {
 public:
     /**
-     * Abstract method for subclasses to override for singleton behavior.
-     */
-    virtual static FileLoader* getInstance() = 0;
-
-    /**
      * Clears the contents of this loader so that it can be used again.
      */
-    void clear();
+    virtual void clear();
 
     /**
      * Attempts to process the file with the given path into the loader's memory.
@@ -34,7 +29,7 @@ public:
      * @param delim The delimiter to separate out the constituent pieces of line.
      * @return A vector containing the  pieces split apart from line.
      */
-    QVector<std::string> split(const std::string& line, char delim);
+    static QVector<std::string> split(const std::string& line, char delim);
 
 private:
     /**
@@ -50,6 +45,7 @@ private:
      */
     void initFilePathPrefix(const std::string& filePath);
 
+protected:
     // Loader data:
     std::string filePathPrefix_;
     bool loaded_ = false;

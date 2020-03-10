@@ -5,6 +5,8 @@
 #include <QVector2D>
 #include <QVector3D>
 
+#include "IndexedVertex.h"
+
 /**
  * Represents an already-loaded .obj file that has been translated into a
  * format for easy OpenGL access.
@@ -99,9 +101,9 @@ private:
      *                          outside the bounds of either positions or
      *                          textureCoordinates.
      */
-    QPair<QVector<IndexedVertex*>, QVector<unsigned int>> TranslatedObject::reorderVertexData(const QVector<QVector3D>& positions,
-                                                                                              const QVector<QVector2D>& textureCoordinates,
-                                                                                              const QVector<QVector<QPair<int, int>>>& faces);
+    static QPair<QVector<IndexedVertex*>, QVector<unsigned int>> reorderVertexData(const QVector<QVector3D>& positions,
+                                                                                   const QVector<QVector2D>& textureCoordinates,
+                                                                                   const QVector<QVector<QPair<int, int>>>& faces);
 
     // Vertex and face data
     float* data_;
