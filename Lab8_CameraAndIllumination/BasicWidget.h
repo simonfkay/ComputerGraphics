@@ -22,7 +22,7 @@ private:
 
   QVector<Renderable*> renderables_;
 
-  QOpenGLDebugLogger logger_;
+  QOpenGLDebugLogger* logger_;
 
   // Mouse controls.
   enum MouseControl {NoAction = 0, Rotate, Zoom};
@@ -46,5 +46,5 @@ public:
   virtual ~BasicWidget();
   
   // Make sure we have some size that makes sense.
-  QSize sizeHint() const {return QSize(800,600);}
+  QSize sizeHint() const override {return QSize(800,600);}
 };

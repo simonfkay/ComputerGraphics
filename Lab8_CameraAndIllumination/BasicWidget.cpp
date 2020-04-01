@@ -2,10 +2,13 @@
 
 #include "UnitQuad.h"
 
+#include <iostream>
+
 //////////////////////////////////////////////////////////////////////
 // Publics
-BasicWidget::BasicWidget(QWidget* parent) : QOpenGLWidget(parent), logger_(this)
+BasicWidget::BasicWidget(QWidget* parent) : QOpenGLWidget(parent)
 {
+  logger_ = new QOpenGLDebugLogger(this);
   setFocusPolicy(Qt::StrongFocus);
   camera_.setPosition(QVector3D(0.5, 0.5, -2.0));
   camera_.setLookAt(QVector3D(0.5, 0.5, 0.0));
@@ -14,6 +17,7 @@ BasicWidget::BasicWidget(QWidget* parent) : QOpenGLWidget(parent), logger_(this)
 
 BasicWidget::~BasicWidget()
 {
+    makeCurrent();
     for (auto renderable : renderables_) {
         delete renderable;
     }
@@ -79,9 +83,8 @@ void BasicWidget::initializeGL()
   initializeOpenGLFunctions();
 
   qDebug() << QDir::currentPath();
-  // TODO:  You may have to change these paths.
-  QString brickTex = "../../brick.ppm";
-  QString grassTex = "../../grass.ppm";
+  QString brickTex = "../brick.ppm";
+  QString grassTex = "../grass.ppm";
 
   UnitQuad* backWall = new UnitQuad();
   backWall->init(brickTex);
@@ -124,21 +127,26 @@ void BasicWidget::initializeGL()
 
 void BasicWidget::resizeGL(int w, int h)
 {
-    if (!logger_.isLogging()) {
-        logger_.initialize();
+    //bool madeCurrent = makeCurrent();
+    //std::cout << "Made current context: " << madeCurrent << std::endl;
+    QOpenGLContext* ctx = QOpenGLContext::currentContext();
+    std::cout << "Context Extension: " << ctx->hasExtension(QByteArrayLiteral("GL_KHR_debug")) << std::endl;
+    if (!logger_->isLogging()) {
+        bool isInitialized = logger_->initialize();
+        std::cout << "Logger is initialized: " << isInitialized << std::endl;
         // Setup the logger for real-time messaging
-        connect(&logger_, &QOpenGLDebugLogger::messageLogged, [=]() {
-            const QList<QOpenGLDebugMessage> messages = logger_.loggedMessages();
+        connect(logger_, &QOpenGLDebugLogger::messageLogged, [=]() {
+            const QList<QOpenGLDebugMessage> messages = logger_->loggedMessages();
             for (auto msg : messages) {
                 qDebug() << msg;
             }
             });
-        logger_.startLogging();
+        logger_->startLogging();
     }
-  glViewport(0, 0, w, h);
+    glViewport(0, 0, w, h);
 
-  camera_.setPerspective(70.f, (float)w / (float)h, 0.001, 1000.0);
-  glViewport(0, 0, w, h);
+    camera_.setPerspective(70.f, (float)w / (float)h, 0.001, 1000.0);
+    glViewport(0, 0, w, h);
 }
 
 void BasicWidget::paintGL()
