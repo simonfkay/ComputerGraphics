@@ -28,6 +28,8 @@ private:
   enum MouseControl {NoAction = 0, Rotate, Zoom};
   QPoint lastMouseLoc_;
   MouseControl mouseAction_;
+  float movementSpeed_;
+  bool firstMouse_ = true;
 
 protected:
   // Required interaction overrides
