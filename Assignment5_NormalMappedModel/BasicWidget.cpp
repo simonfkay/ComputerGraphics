@@ -81,9 +81,9 @@ void BasicWidget::initializeGL()
   //   renderables_.push_back(Renderable::createFromFile(input_));
   // }
   renderables_.push_back(Renderable::createFromFile("../objects/house/house_obj.obj"));
-  // renderables_.push_back(Renderable::createFromFile("../objects/windmill/windmill.obj"));
-  // renderables_.push_back(Renderable::createFromFile("../objects/chapel/chapel_obj.obj"));
-  // renderables_.push_back(Renderable::createFromFile("../objects/capsule/capsule.obj"));
+  renderables_.push_back(Renderable::createFromFile("../objects/windmill/windmill.obj"));
+  renderables_.push_back(Renderable::createFromFile("../objects/chapel/chapel_obj.obj"));
+  renderables_.push_back(Renderable::createFromFile("../objects/capsule/capsule.obj"));
 
 
   glViewport(0, 0, width(), height());

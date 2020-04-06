@@ -10,6 +10,7 @@ uniform mat4 projectionMatrix;
 
 out vec2 texCoords;
 out vec3 normalCoords;
+out vec3 FragPos;
 
 void main()
 {
@@ -17,5 +18,6 @@ void main()
     gl_Position = projectionMatrix*viewMatrix*modelMatrix*vec4(position, 1.0);
 
     texCoords = textureCoordinates;
-    normalCoords = (modelMatrix * vec4(normal, 1.0)).xyz;
+    normalCoords = normal;
+    FragPos = vec3(modelMatrix * vec4(position, 1.0f));
 }

@@ -126,6 +126,8 @@ void Renderable::draw(const QMatrix4x4& view, const QMatrix4x4& projection)
     shader_.setUniformValue("viewMatrix", view);
     shader_.setUniformValue("projectionMatrix", projection);
 
+    //shader_.setUniformValue("lightPos", xx);
+
     vao_.bind();
     texture_.bind();
     glDrawElements(GL_TRIANGLES, 3 * numTris_, GL_UNSIGNED_INT, 0);
