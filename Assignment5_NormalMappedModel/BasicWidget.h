@@ -44,5 +44,5 @@ public:
   virtual ~BasicWidget();
   
   // Make sure we have some size that makes sense.
-  QSize sizeHint() const {return QSize(800,600);}
+  QSize sizeHint() const override {return QSize(800,600);}
 };

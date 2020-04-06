@@ -56,9 +56,9 @@ public:
      * 
      * @param positions The list of distinct vertex positions for the object
      *                  model.
-     * @param normals The list of distinct vertex normals for the object model.
      * @param textureCoordinates The list of distinct texture coordinates for
      *                           the object model.
+     * @param normals The list of distinct vertex normals for the object model.
      * @param faces The list of face data, which comprises of ordered triplets
      *              of index triplets, the first corresponding to the positions
      *              list, the second corresponding to to the textureCoordinates
@@ -72,9 +72,9 @@ public:
      *                          textureCoordinates.
      */
     static TranslatedObj* translate(const QVector<QVector3D>& positions,
-                                    const QVector<QVector3D>& normals,
                                     const QVector<QVector2D>& textureCoordinates,
-                                    const QVector<QVector3D>& faces,
+                                    const QVector<QVector3D>& normals,
+                                    const QVector<QVector<QVector3D>>& faces,
                                     const std::string& diffuseMapPath);
 
 private:

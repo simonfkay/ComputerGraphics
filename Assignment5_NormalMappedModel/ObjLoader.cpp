@@ -45,7 +45,7 @@ TranslatedObj* ObjLoader::translate() {
     if (!loaded_) {
         throw std::runtime_error("Cannot translate an unloaded .obj file.");
     }
-    return TranslatedObj::translate(getPositions(), getNormals(), getTextureCoordinates(), getFaces(), getDiffuseMapPath());
+    return TranslatedObj::translate(getPositions(), getTextureCoordinates(), getNormals(), getFaces(), getDiffuseMapPath());
 }
 
 /**
