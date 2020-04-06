@@ -5,7 +5,7 @@
 class UnitQuad : public Renderable
 {
 protected:
-	QVector3D lightPos_;
+	QVector<QVector3D> lightPos_;
 	float sign_;
 public:
 	UnitQuad();
