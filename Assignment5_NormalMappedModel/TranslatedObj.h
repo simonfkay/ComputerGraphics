@@ -51,26 +51,30 @@ public:
     std::string getDiffuseMapPath();
 
     /**
-     * Translates the data of an already loaded .obj file to a format that can be
-     * easily used with OpenGL.
+     * Translates the data of an already loaded .obj file to a format that can
+     * be easily used with OpenGL.
      * 
-     * @param positions The list of distinct vertex positions for the object model.
-     * @param textureCoordinates The list of distinct texture coordinates for the
-     *                           object model.
-     * @param faces The list of face data, which comprises of ordered triplets of
-     *              index pairs, the first corresponding to the positions list, and
-     *              the second corresponding to to the textureCoordinates list.
+     * @param positions The list of distinct vertex positions for the object
+     *                  model.
+     * @param normals The list of distinct vertex normals for the object model.
+     * @param textureCoordinates The list of distinct texture coordinates for
+     *                           the object model.
+     * @param faces The list of face data, which comprises of ordered triplets
+     *              of index triplets, the first corresponding to the positions
+     *              list, the second corresponding to to the textureCoordinates
+     *              list, and the third corresponding to the normals list.
      * @param diffuseMapPath The file path to the corresponding diffuse map for
      *                       object texturing.
-     * @return A pointer to an object containing the translated .obj data for use
-     *         with OpenGL.
+     * @return A pointer to an object containing the translated .obj data for
+     *         use with OpenGL.
      * @throws invalid_argument if an index pair in one of the given faces lies
      *                          outside the bounds of either positions or
      *                          textureCoordinates.
      */
     static TranslatedObj* translate(const QVector<QVector3D>& positions,
+                                    const QVector<QVector3D>& normals,
                                     const QVector<QVector2D>& textureCoordinates,
-                                    const QVector<QVector<QPair<int, int>>>& faces,
+                                    const QVector<QVector3D>& faces,
                                     const std::string& diffuseMapPath);
 
 private:
@@ -87,23 +91,27 @@ private:
     /**
      * Reorders vertex data for use in OpenGL.
      * 
-     * @param positions The list of distinct vertex positions for the object model.
-     * @param textureCoordinates The list of distinct texture coordinates for the
-     *                           object model.
-     * @param faces The list of face data, which comprises of ordered triplets of
-     *              index pairs, the first corresponding to the positions list, and
-     *              the second corresponding to to the textureCoordinates list.
-     * @return A pair of lists where the first is a list of the reordered vertex
-     *         data, grouping together associated position and texture coordinate
-     *         values, and the second is a list of these newly indexed vertices in
-     *         the same order as specified in faces.
+     * @param positions The list of distinct vertex positions for the object
+     *                  model.
+     * @param textureCoordinates The list of distinct texture coordinates for
+     *                           the object model.
+     * @param normals The list of distinct vertex normals for the object model.
+     * @param faces The list of face data, which comprises of ordered triplets
+     *              of index triplets, the first corresponding to the positions
+     *              list, the second corresponding to to the textureCoordinates
+     *              list, and the third corresponding to the normals list.
+     * @return A pair of lists where the first is a list of the reordered
+     *         vertex data, grouping together associated position, texture
+     *         coordinate, and normal values, and the second is a list of these
+     *         newly indexed vertices in the same order as specified in faces.
      * @throws invalid_argument if an index pair in one of the given faces lies
-     *                          outside the bounds of either positions or
-     *                          textureCoordinates.
+     *                          outside the bounds of either positions,
+     *                          textureCoordinates, or normals.
      */
     static QPair<QVector<IndexedVertex*>, QVector<unsigned int>> reorderVertexData(const QVector<QVector3D>& positions,
                                                                                    const QVector<QVector2D>& textureCoordinates,
-                                                                                   const QVector<QVector<QPair<int, int>>>& faces);
+                                                                                   const QVector<QVector3D>& normals,
+                                                                                   const QVector<QVector<QVector3D>>& faces);
 
     // Vertex and face data
     float* data_;

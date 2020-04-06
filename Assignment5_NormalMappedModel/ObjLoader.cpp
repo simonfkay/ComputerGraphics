@@ -23,6 +23,7 @@ ObjLoader* ObjLoader::getInstance() {
 void ObjLoader::clear() {
     FileLoader::clear();
     positions_.clear();
+    normals_.clear();
     textureCoordinates_.clear();
     faces_.clear();
     diffuseMapPath_ = "";
@@ -44,7 +45,7 @@ TranslatedObj* ObjLoader::translate() {
     if (!loaded_) {
         throw std::runtime_error("Cannot translate an unloaded .obj file.");
     }
-    return TranslatedObj::translate(getPositions(), getTextureCoordinates(), getFaces(), getDiffuseMapPath());
+    return TranslatedObj::translate(getPositions(), getNormals(), getTextureCoordinates(), getFaces(), getDiffuseMapPath());
 }
 
 /**
@@ -70,6 +71,13 @@ QVector<QVector3D> ObjLoader::getPositions() {
 }
 
 /**
+ * Gets the list of vertex normal information for this loaded .obj file.
+ */
+QVector<QVector3D> ObjLoader::getNormals() {
+    return normals_;
+}
+
+/**
  * Gets the list of texture coordinates for this loaded .obj file.
  */
 QVector<QVector2D> ObjLoader::getTextureCoordinates() {
@@ -79,7 +87,7 @@ QVector<QVector2D> ObjLoader::getTextureCoordinates() {
 /**
  * Gets the list of face information for this loaded .obj file.
  */
-QVector<QVector<QPair<int, int>>> ObjLoader::getFaces() {
+QVector<QVector<QVector3D>> ObjLoader::getFaces() {
     return faces_;
 }
 
@@ -111,7 +119,7 @@ void ObjLoader::processFaceLine(const QVector<std::string>& splitLine) {
     
     int ii = 1;
     try {
-        QVector<QPair<int, int>> face;
+        QVector<QVector3D> face;
         for (; ii < splitLine.size(); ++ii) {
             face.append(ObjLoader::processVertexIndices(splitLine.at(ii)));
         }
@@ -139,6 +147,8 @@ void ObjLoader::processLine(const std::string& line) {
             std::string lineType = splitLine.at(0);
             if (lineType == "v") {
                 ObjLoader::processVertexPositionLine(splitLine);
+            } else if (lineType == "vn") {
+                ObjLoader::processVertexNormalLine(splitLine);
             } else if (lineType == "vt") {
                 ObjLoader::processTextureCoordinateLine(splitLine);
             } else if (lineType == "f") {
@@ -216,6 +226,39 @@ void ObjLoader::processVertexPositionLine(const QVector<std::string>& splitLine)
 }
 
 /**
+ * Takes a vertex normal specification line, and if valid, adds the
+ * specified vertex normal to the loader's memory.
+ *
+ * @param splitLine The vertex normal specification line, already split
+ *                  into different entries.
+ * @throws invalid_argument if splitLine does not contain an entry for each
+ *                          of the three components of a normal vector, or if
+ *                          no float conversion could be performed on one of
+ *                          its entries.
+ * @throws out_of_range if the value read from one of the entries of
+ *                      splitLine is out of the range of representable
+ *                      values by a float.
+ */
+void ObjLoader::processVertexNormalLine(const QVector<std::string>& splitLine) {
+    if (splitLine.size() != 4) {
+        throw std::invalid_argument("Line does not contain an entry for each "
+                                    "of the three components of a normal "
+                                    "vector.");
+    }
+
+    std::string xStr = splitLine.at(1);
+    std::string yStr = splitLine.at(2);
+    std::string zStr = splitLine.at(3);
+
+    float x = stof(xStr);
+    float y = stof(yStr);
+    float z = stof(zStr);
+
+    QVector3D vertexNormal = QVector3D(x, y, z);
+    normals_.append(vertexNormal);
+}
+
+/**
  * Takes a texture coordinate specification line, and if valid, adds the
  * specified texture coordinate to the loader's memory.
  *
@@ -251,35 +294,34 @@ void ObjLoader::processTextureCoordinateLine(const QVector<std::string>& splitLi
  * indices to the loader's memory.
  * 
  * @param vertexIndices The vertex index specification.
- * @return A pair of integers parsed from vertexIndices representing a pair
- *         of associated vertex and texture indices.
+ * @return A vector of integers parsed from vertexIndices representing a triple
+ *         of associated vertex, texture, and normal indices.
  * @throws bad_alloc if the function needs to allocate storage and fails.
  * @throws invalid_argument if vertPair does not contain an entry for each
  *                          of an associated vertex, vertex texture, and
- *                          vertex normal index (the last of which can be
- *                          empty), or if no integer conversion could be
- *                          performed on one of the split segments of
+ *                          vertex normal index, or if no integer conversion
+ *                          could be performed on one of the split segments of
  *                          vertexIndices.
  * @throws out_of_range if one of the parsed values is out of the range of
  *                      representable values by an int.
  */
-QPair<int, int> ObjLoader::processVertexIndices(const std::string& vertexIndices) {
+QVector3D ObjLoader::processVertexIndices(const std::string& vertexIndices) {
     QVector<std::string> splitIndices = FileLoader::split(vertexIndices, '/');
 
     if (splitIndices.size() != 3) {
         throw std::invalid_argument("Vertex index specification does not "
                                     "contain an entry for each of an "
                                     "associated vertex, vertex texture, and "
-                                    "vertex normal index (the last of which "
-                                    "can be empty).");
+                                    "vertex normal index.");
     }
     
     std::string vStr = splitIndices.at(0);
     std::string vtStr = splitIndices.at(1);
+    std::string vnStr = splitIndices.at(2);
 
     int v = stoi(vStr);
     int vt = stoi(vtStr);
+    int vn = stoi(vnStr);
 
-    QPair<int, int> vertexIdxs = QPair<int, int>(v, vt);
-    return vertexIdxs;
+    return QVector3D(v, vt, vn);
 }

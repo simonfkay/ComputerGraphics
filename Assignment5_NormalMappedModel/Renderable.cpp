@@ -91,6 +91,8 @@ void Renderable::init(TranslatedObj* object)
     shader_.setAttributeBuffer(0, GL_FLOAT, 0, 3, vertexSize * sizeof(float));
     shader_.enableAttributeArray(1);
     shader_.setAttributeBuffer(1, GL_FLOAT, 3 * sizeof(float), 2, vertexSize * sizeof(float));
+    shader_.enableAttributeArray(2);
+    shader_.setAttributeBuffer(2, GL_FLOAT, 5 * sizeof(float), 3, vertexSize * sizeof(float));
 
     // Release our vao and THEN release our buffers.
     vao_.release();

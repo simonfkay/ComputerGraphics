@@ -73,15 +73,6 @@ void BasicWidget::initializeGL()
   makeCurrent();
   initializeOpenGLFunctions();
 
-  QOpenGLContext* curContext = this->context();
-  qDebug() << "[BasicWidget]::initializeGL() -- Context Information:";
-  qDebug() << "  Context Valid: " << std::string(curContext->isValid() ? "true" : "false").c_str();
-  qDebug() << "  GL Version Used: " << curContext->format().majorVersion() << "." << curContext->format().minorVersion();
-  qDebug() << "  Vendor: " << reinterpret_cast<const char*>(glGetString(GL_VENDOR));
-  qDebug() << "  Renderer: " << reinterpret_cast<const char*>(glGetString(GL_RENDERER));
-  qDebug() << "  Version: " << reinterpret_cast<const char*>(glGetString(GL_VERSION));
-  qDebug() << "  GLSL Version: " << reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
-
   wireframeMode_ = false;
   modelSelectedIndex_ = 0;
 

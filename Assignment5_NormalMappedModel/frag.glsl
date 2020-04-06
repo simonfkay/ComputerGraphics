@@ -1,6 +1,7 @@
 #version 330
 
 in vec2 texCoords;
+in vec3 normalCoords;
 
 out vec4 fragmentColor;
 
@@ -9,4 +10,6 @@ uniform sampler2D tex;
 void main() {
   // Set our output fragment color to whatever we pull from our input texture (Note, change 'tex' to whatever the sampler is named)
   fragmentColor = texture(tex, texCoords);
+
+  // [TODO: Implement normals]
 }

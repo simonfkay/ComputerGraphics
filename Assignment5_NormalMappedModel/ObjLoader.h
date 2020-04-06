@@ -51,15 +51,13 @@ public:
     /**
      * Gets the list of face information for this loaded .obj file.
      */
-    QVector<QVector<QPair<int, int>>> getFaces();
+    QVector<QVector<QVector3D>> getFaces();
 
     /**
      * Gets the diffuse map file path specified in this .obj file's associated
      * .mtl file.
      */
     std::string getDiffuseMapPath();
-
-    
 
 private:
     /**
@@ -76,6 +74,11 @@ private:
      * Private assignment operator to enforce singleton behavior.
      */
     ObjLoader& operator=(const ObjLoader&);
+
+    /**
+     * Gets the list of vertex normal information for this loaded .obj file.
+     */
+    QVector<QVector3D> getNormals();
 
     /**
      * Takes a face specification line, and if valid, adds the specified face
@@ -129,6 +132,22 @@ private:
     void processVertexPositionLine(const QVector<std::string>& splitLine);
 
     /**
+     * Takes a vertex normal specification line, and if valid, adds the
+     * specified vertex normal to the loader's memory.
+     *
+     * @param splitLine The vertex normal specification line, already split
+     *                  into different entries.
+     * @throws invalid_argument if splitLine does not contain an entry for each
+     *                          of the three components of a normal vector, or
+     *                          if no float conversion could be performed on
+     *                          one of its entries.
+     * @throws out_of_range if the value read from one of the entries of
+     *                      splitLine is out of the range of representable
+     *                      values by a float.
+     */
+    void processVertexNormalLine(const QVector<std::string>& splitLine);
+
+    /**
      * Takes a texture coordinate specification line, and if valid, adds the
      * specified texture coordinate to the loader's memory.
      *
@@ -148,24 +167,24 @@ private:
      * indices to the loader's memory.
      * 
      * @param vertexIndices The vertex index specification.
-     * @return A pair of integers parsed from vertexIndices representing a pair
-     *         of associated vertex and texture indices.
+     * @return A vector of integers parsed from vertexIndices representing a
+     *         triple of associated vertex, texture, and normal indices.
      * @throws bad_alloc if the function needs to allocate storage and fails.
      * @throws invalid_argument if vertPair does not contain an entry for each
      *                          of an associated vertex, vertex texture, and
-     *                          vertex normal index (the last of which can be
-     *                          empty), or if no integer conversion could be
-     *                          performed on one of the split segments of
-     *                          vertexIndices.
+     *                          vertex normal index, or if no integer
+     *                          conversion could be performed on one of the
+     *                          split segments of vertexIndices.
      * @throws out_of_range if one of the parsed values is out of the range of
      *                      representable values by an int.
      */
-    static QPair<int, int> processVertexIndices(const std::string& vertexIndices);
+    static QVector3D processVertexIndices(const std::string& vertexIndices);
 
     // Loaded data:
     QVector<QVector3D> positions_;
+    QVector<QVector3D> normals_;
     QVector<QVector2D> textureCoordinates_;
-    QVector<QVector<QPair<int, int>>> faces_;
+    QVector<QVector<QVector3D>> faces_;
     std::string diffuseMapPath_;
 
     // Singleton loader instance:
