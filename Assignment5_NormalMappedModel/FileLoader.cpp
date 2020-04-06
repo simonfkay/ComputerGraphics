@@ -42,7 +42,8 @@ void FileLoader::loadFile(const std::string& filePath) {
         file.close();
         loaded_ = true;
     } else {
-        throw std::invalid_argument("Unable to open file at: " + filePath);
+        std::string message = "Unable to open file at: \"" + filePath + "\".";
+        throw std::invalid_argument(message);
     }
 }
 

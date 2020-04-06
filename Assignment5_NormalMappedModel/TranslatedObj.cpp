@@ -78,6 +78,7 @@ TranslatedObj* TranslatedObj::translate(const QVector<QVector3D>& positions, con
     // Reorder vertex data to make sense for OpenGL
     QPair<QVector<IndexedVertex*>, QVector<unsigned int>> reorderedVertexData = TranslatedObj::reorderVertexData(positions, textureCoordinates, normals, faces);
     QVector<IndexedVertex*> indexedVertices = reorderedVertexData.first;
+
     QVector<unsigned int> faceIndices = reorderedVertexData.second;
 
     // Initialize constants
@@ -178,6 +179,7 @@ QPair<QVector<IndexedVertex*>, QVector<unsigned int>> TranslatedObj::reorderVert
                 QVector3D position = positions.at(positionIndex);
                 QVector2D textureCoordinatePair = textureCoordinates.at(textureIndex);
                 QVector3D normal = normals.at(normalIndex);
+
                 nextVertex = new IndexedVertex(position, textureCoordinatePair, normal, positionIndex, textureIndex, normalIndex, newOrdering.size());
                 (quickLookup[positionIndex])[textureIndex].emplace(normalIndex, nextVertex);
                 newOrdering.append(nextVertex);

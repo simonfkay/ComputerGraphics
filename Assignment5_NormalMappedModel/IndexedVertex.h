@@ -27,6 +27,7 @@ struct IndexedVertex {
                   unsigned int normalIndex,
                   unsigned int newIndex) : position_(position),
                                            textureCoordinates_(textureCoordinates),
+                                           normal_(normal),
                                            positionIndex_(positionIndex),
                                            textureCoordinatesIndex_(textureCoordinatesIndex),
                                            normalIndex_(normalIndex),

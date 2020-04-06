@@ -1,8 +1,6 @@
 #include "Renderable.h"
 #include "ObjLoader.h"
 
-#include <iostream>
-
 #include <QtGui>
 #include <QtOpenGL>
 

@@ -17,5 +17,5 @@ void main()
     gl_Position = projectionMatrix*viewMatrix*modelMatrix*vec4(position, 1.0);
 
     texCoords = textureCoordinates;
-    normalCoords = normal;
+    normalCoords = (modelMatrix * vec4(normal, 1.0)).xyz;
 }
