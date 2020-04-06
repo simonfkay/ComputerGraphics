@@ -10,7 +10,6 @@
 // Publics
 BasicWidget::BasicWidget(QWidget* parent) : QOpenGLWidget(parent)
 {
-  logger_ = new QOpenGLDebugLogger(this);
   setFocusPolicy(Qt::StrongFocus);
   camera_.setPosition(QVector3D(0.5, 0.5, -2.0));
   camera_.setLookAt(QVector3D(0.5, 0.5, 0.0));
@@ -118,7 +117,6 @@ void BasicWidget::initializeGL()
   makeCurrent();
   initializeOpenGLFunctions();
 
-  qDebug() << QDir::currentPath();
   QString brickTex = "../brick.ppm";
   QString grassTex = "../grass.ppm";
 
@@ -163,22 +161,6 @@ void BasicWidget::initializeGL()
 
 void BasicWidget::resizeGL(int w, int h)
 {
-    //bool madeCurrent = makeCurrent();
-    //std::cout << "Made current context: " << madeCurrent << std::endl;
-    QOpenGLContext* ctx = QOpenGLContext::currentContext();
-    std::cout << "Context Extension: " << ctx->hasExtension(QByteArrayLiteral("GL_KHR_debug")) << std::endl;
-    if (!logger_->isLogging()) {
-        bool isInitialized = logger_->initialize();
-        std::cout << "Logger is initialized: " << isInitialized << std::endl;
-        // Setup the logger for real-time messaging
-        connect(logger_, &QOpenGLDebugLogger::messageLogged, [=]() {
-            const QList<QOpenGLDebugMessage> messages = logger_->loggedMessages();
-            for (auto msg : messages) {
-                qDebug() << msg;
-            }
-            });
-        logger_->startLogging();
-    }
     glViewport(0, 0, w, h);
 
     camera_.setAspect((float)w / (float)h);

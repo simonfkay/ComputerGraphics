@@ -22,8 +22,6 @@ private:
 
   QVector<Renderable*> renderables_;
 
-  QOpenGLDebugLogger* logger_;
-
   // Mouse controls.
   enum MouseControl {NoAction = 0, Rotate, Zoom};
   QPoint lastMouseLoc_;
