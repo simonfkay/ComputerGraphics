@@ -31,6 +31,14 @@ public:
      */
     static QVector<std::string> split(const std::string& line, char delim);
 
+    /**
+     * Trims whitespace from the front and back of the given string.
+     *
+     * @param string The string to be trimmed.
+     * @return The trimmed string.
+     */
+    static std::string trim(const std::string& string);
+
 private:
     /**
      * Takes a line, and if valid, adds the corresponding parsed data to the

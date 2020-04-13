@@ -25,6 +25,7 @@ void FileLoader::loadFile(const std::string& filePath) {
     FileLoader::initFilePathPrefix(filePath);
 
     std::ifstream file;
+    std::cout << filePath << std::endl;
     file.open(filePath);
     if (file.is_open()) {
         std::string line;
@@ -43,6 +44,7 @@ void FileLoader::loadFile(const std::string& filePath) {
         loaded_ = true;
     } else {
         std::string message = "Unable to open file at: \"" + filePath + "\".";
+        std::cout << message << std::endl;
         throw std::invalid_argument(message);
     }
 }
@@ -60,10 +62,34 @@ QVector<std::string> FileLoader::split(const std::string& line, char delim) {
     std::string item;
 
     while (getline(stream, item, delim)) {
-        splitLine << item;
+        splitLine << trim(item);
     }
 
     return splitLine;
+}
+
+/**
+ * Trims whitespace from the front and back of the given string.
+ *
+ * @param string The string to be trimmed.
+ * @return The trimmed string.
+ */
+std::string FileLoader::trim(const std::string& string) {
+    std::string whitespace = " \n\r\t\f\v";
+    size_t start = string.find_first_not_of(whitespace);
+    size_t end = string.find_last_not_of(whitespace);
+
+    if (start == std::string::npos) {
+        return "";
+    }
+
+    std::string rstring = string.substr(start);
+
+    if (end == std::string::npos) {
+        return "";
+    }
+
+    return rstring.substr(0, end + 1);
 }
 
 /**

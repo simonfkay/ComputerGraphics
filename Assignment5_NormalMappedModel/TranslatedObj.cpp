@@ -55,6 +55,14 @@ std::string TranslatedObj::getDiffuseMapPath() {
 }
 
 /**
+ * Gets the normal map file path for this translated .obj file to be fed to
+ * OpenGL.
+ */
+std::string TranslatedObj::getNormalMapPath() {
+    return normalMapPath_;
+}
+
+/**
  * Translates the data of an already loaded .obj file to a format that can be
  * easily used with OpenGL.
  * 
@@ -68,13 +76,15 @@ std::string TranslatedObj::getDiffuseMapPath() {
  *              the third corresponding to the normals list.
  * @param diffuseMapPath The file path to the corresponding diffuse map for
  *                       object texturing.
+ * @param normalMapPath The file path to the corresponding normal map for
+ *                       object texturing.
  * @return A pointer to an object containing the translated .obj data for use
  *         with OpenGL.
  * @throws invalid_argument if an index pair in one of the given faces lies
  *                          outside the bounds of either positions or
  *                          textureCoordinates.
  */
-TranslatedObj* TranslatedObj::translate(const QVector<QVector3D>& positions, const QVector<QVector2D>& textureCoordinates, const QVector<QVector3D>& normals, const QVector<QVector<QVector3D>>& faces, const std::string& diffuseMapPath) {
+TranslatedObj* TranslatedObj::translate(const QVector<QVector3D>& positions, const QVector<QVector2D>& textureCoordinates, const QVector<QVector3D>& normals, const QVector<QVector<QVector3D>>& faces, const std::string& diffuseMapPath, const std::string& normalMapPath) {
     // Reorder vertex data to make sense for OpenGL
     QPair<QVector<IndexedVertex*>, QVector<unsigned int>> reorderedVertexData = TranslatedObj::reorderVertexData(positions, textureCoordinates, normals, faces);
     QVector<IndexedVertex*> indexedVertices = reorderedVertexData.first;
@@ -106,7 +116,7 @@ TranslatedObj* TranslatedObj::translate(const QVector<QVector3D>& positions, con
         indices[ii] = faceIndices.at(ii);
     }
 
-    TranslatedObj* translated = new TranslatedObj(data, indices, numData, numIndices, vertexSize, diffuseMapPath);
+    TranslatedObj* translated = new TranslatedObj(data, indices, numData, numIndices, vertexSize, diffuseMapPath, normalMapPath);
 
     for (IndexedVertex* indexedVertex : indexedVertices) {
         delete indexedVertex;
@@ -123,12 +133,14 @@ TranslatedObj::TranslatedObj(float* data,
                              unsigned int numData,
                              unsigned int numIndices,
                              unsigned int vertexSize,
-                             const std::string& diffuseMapPath) : data_(data),
-                                                                  indices_(indices),
-                                                                  numData_(numData),
-                                                                  numIndices_(numIndices),
-                                                                  vertexSize_(vertexSize),
-                                                                  diffuseMapPath_(diffuseMapPath) { }
+                             const std::string& diffuseMapPath,
+                             const std::string& normalMapPath) : data_(data),
+                                                                 indices_(indices),
+                                                                 numData_(numData),
+                                                                 numIndices_(numIndices),
+                                                                 vertexSize_(vertexSize),
+                                                                 diffuseMapPath_(diffuseMapPath),
+                                                                 normalMapPath_(normalMapPath) { }
 
 /**
  * Reorders vertex data for use in OpenGL.

@@ -36,8 +36,6 @@ public:
      */
     TranslatedObj* translate();
 
-
-
     /**
      * Gets the list of vertex position information for this loaded .obj file.
      */
@@ -58,6 +56,12 @@ public:
      * .mtl file.
      */
     std::string getDiffuseMapPath();
+
+    /**
+     * Gets the normal map file path specified in this .obj file's associated
+     * .mtl file.
+     */
+    std::string getNormalMapPath();
 
 private:
     /**
@@ -186,6 +190,7 @@ private:
     QVector<QVector2D> textureCoordinates_;
     QVector<QVector<QVector3D>> faces_;
     std::string diffuseMapPath_;
+    std::string normalMapPath_;
 
     // Singleton loader instance:
     static ObjLoader* loaderInstance_;

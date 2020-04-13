@@ -14,6 +14,8 @@ protected:
     QOpenGLShaderProgram shader_;
     // For now, we have only one texture per object
     QOpenGLTexture texture_;
+    // For now, we have only one texture per object
+    QOpenGLTexture normalMap_;
     // For now, we have a single unified buffer per object
     QOpenGLBuffer vbo_;
     // Make sure we have an index buffer.

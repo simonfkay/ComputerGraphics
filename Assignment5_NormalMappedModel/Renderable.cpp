@@ -4,7 +4,7 @@
 #include <QtGui>
 #include <QtOpenGL>
 
-Renderable::Renderable() : vbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), texture_(QOpenGLTexture::Target2D), numTris_(0), rotationAxis_(0.0, 1.0, 0.0), rotationSpeed_(0.125)
+Renderable::Renderable() : vbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), texture_(QOpenGLTexture::Target2D), normalMap_(QOpenGLTexture::Target2D), numTris_(0), rotationAxis_(0.0, 1.0, 0.0), rotationSpeed_(0.125)
 {
     rotationAngle_ = 0.0;
 }
@@ -13,6 +13,9 @@ Renderable::~Renderable()
 {
     if (texture_.isCreated()) {
         texture_.destroy();
+    }
+    if (normalMap_.isCreated()) {
+        normalMap_.destroy();
     }
     if (vbo_.isCreated()) {
         vbo_.destroy();
@@ -53,8 +56,10 @@ void Renderable::init(TranslatedObj* object)
     
     unsigned int vertexSize = object->getVertexSize();
     QString diffuseMapPath = QString::fromStdString(object->getDiffuseMapPath());
+    QString normalMapPath = QString::fromStdString(object->getNormalMapPath());
 
     texture_.setData(QImage(diffuseMapPath).mirrored(true, true));
+    normalMap_.setData(QImage(normalMapPath).mirrored(true, true));
 
     // Set our model matrix to identity
     modelMatrix_.setToIdentity();
@@ -89,8 +94,6 @@ void Renderable::init(TranslatedObj* object)
     shader_.setAttributeBuffer(0, GL_FLOAT, 0, 3, vertexSize * sizeof(float));
     shader_.enableAttributeArray(1);
     shader_.setAttributeBuffer(1, GL_FLOAT, 3 * sizeof(float), 2, vertexSize * sizeof(float));
-    shader_.enableAttributeArray(2);
-    shader_.setAttributeBuffer(2, GL_FLOAT, 5 * sizeof(float), 3, vertexSize * sizeof(float));
 
     // Release our vao and THEN release our buffers.
     vao_.release();
@@ -130,7 +133,9 @@ void Renderable::draw(const QMatrix4x4& view, const QMatrix4x4& projection)
 
     vao_.bind();
     texture_.bind();
+    normalMap_.bind();
     glDrawElements(GL_TRIANGLES, 3 * numTris_, GL_UNSIGNED_INT, 0);
+    normalMap_.bind();
     texture_.release();
     vao_.release();
     shader_.release();

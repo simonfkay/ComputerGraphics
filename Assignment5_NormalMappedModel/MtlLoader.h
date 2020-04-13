@@ -22,6 +22,11 @@ public:
      */
     std::string getDiffuseMapPath();
 
+    /**
+     * Gets the path for the normal map specified in the loaded .mtl file.
+     */
+    std::string getNormalMapPath();
+
 private:
     /**
      * Standard private constructor.
@@ -55,14 +60,30 @@ private:
      * @param splitLine The diffuse map file name declaration line, already split
      *                  into different entries.
      * @throws invalid_argument if splitLine does not contain a single additional
-     *                          entry past "mtllib" representing the file name; if
-     *                          the specified file name is not a .ppm file; or if
-     *                          the file at the given path simply cannot be opened.
+     *                          entry past "map_Kd" representing the file name;
+     *                          if the specified file name is not a .ppm file;
+     *                          or if the file at the given path simply cannot
+     *                          be opened.
      */
     void processMapKdLine(const QVector<std::string>& splitLine);
 
+    /**
+     * Takes a normal map file name declaration line, and if valid, stores the
+     * file path in the loader's memory.
+     *
+     * @param splitLine The normal map file name declaration line, already split
+     *                  into different entries.
+     * @throws invalid_argument if splitLine does not contain a single additional
+     *                          entry past "map_Bump" representing the file
+     *                          name; if the specified file name is not a .ppm
+     *                          file; or if the file at the given path simply
+     *                          cannot be opened.
+     */
+    void processMapBumpLine(const QVector<std::string>& splitLine);
+
     // Loader data:
     std::string diffuseMapPath_;
+    std::string normalMapPath_;
 
     // Singleton loader instance:
     static MtlLoader* loaderInstance_;

@@ -45,7 +45,7 @@ TranslatedObj* ObjLoader::translate() {
     if (!loaded_) {
         throw std::runtime_error("Cannot translate an unloaded .obj file.");
     }
-    return TranslatedObj::translate(getPositions(), getTextureCoordinates(), getNormals(), getFaces(), getDiffuseMapPath());
+    return TranslatedObj::translate(getPositions(), getTextureCoordinates(), getNormals(), getFaces(), getDiffuseMapPath(), getNormalMapPath());
 }
 
 /**
@@ -97,6 +97,14 @@ QVector<QVector<QVector3D>> ObjLoader::getFaces() {
  */
 std::string ObjLoader::getDiffuseMapPath() {
     return diffuseMapPath_;
+}
+
+/**
+ * Gets the normal map file path specified in this .obj file's associated
+ * .mtl file.
+ */
+std::string ObjLoader::getNormalMapPath() {
+    return normalMapPath_;
 }
 
 /**
@@ -165,7 +173,7 @@ void ObjLoader::processLine(const std::string& line) {
 
 /**
  * Takes a material library specification line, and if valid, loads the
- * .mtl file to be parsed for the file path for the diffuse map.
+ * .mtl file to be parsed for the file path for the diffuse and normal maps.
  *
  * @param splitLine The material library specification line, already split
  *                  into different entries.
@@ -189,6 +197,7 @@ void ObjLoader::processMtllibLine(const QVector<std::string>& splitLine) {
                                     "loaded: " + mtlLibPath);
     }
     diffuseMapPath_ = mtlLoader->getDiffuseMapPath();
+    normalMapPath_ = mtlLoader->getNormalMapPath();
     mtlLoader->clear();
 }
 

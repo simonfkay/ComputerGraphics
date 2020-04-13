@@ -35,33 +35,33 @@ void BasicWidget::keyReleaseEvent(QKeyEvent* keyEvent)
     qDebug() << "W key pressed.";
     wireframeMode_ = !wireframeMode_;
     break;
-  case Qt::Key_1:
-    qDebug() << "1 key pressed.";
-    modelSelectedIndex_ = 0;
-    update();
-    break;
-  case Qt::Key_2:
-    qDebug() << "2 key pressed.";
-    modelSelectedIndex_ = 1;
-    update();
-    break;
-  case Qt::Key_3:
-    qDebug() << "3 key pressed.";
-    modelSelectedIndex_ = 2;
-    update();
-    break;
-  case Qt::Key_4:
-    qDebug() << "4 key pressed.";
-    modelSelectedIndex_ = 3;
-    update();
-    break;
-  case Qt::Key_5:
-    qDebug() << "5 key pressed.";
-    if (customInput_) {
-      modelSelectedIndex_ = 4;
-    }
-    update();
-    break;
+  // case Qt::Key_1:
+  //   qDebug() << "1 key pressed.";
+  //   modelSelectedIndex_ = 0;
+  //   update();
+  //   break;
+  // case Qt::Key_2:
+  //   qDebug() << "2 key pressed.";
+  //   modelSelectedIndex_ = 1;
+  //   update();
+  //   break;
+  // case Qt::Key_3:
+  //   qDebug() << "3 key pressed.";
+  //   modelSelectedIndex_ = 2;
+  //   update();
+  //   break;
+  // case Qt::Key_4:
+  //   qDebug() << "4 key pressed.";
+  //   modelSelectedIndex_ = 3;
+  //   update();
+  //   break;
+  // case Qt::Key_5:
+  //   qDebug() << "5 key pressed.";
+  //   if (customInput_) {
+  //     modelSelectedIndex_ = 4;
+  //   }
+  //   update();
+  //   break;
   default:
     qDebug() << "You pressed an unsupported key.";
 
@@ -80,10 +80,11 @@ void BasicWidget::initializeGL()
   //   customInput_ = true;
   //   renderables_.push_back(Renderable::createFromFile(input_));
   // }
-  renderables_.push_back(Renderable::createFromFile("../objects/house/house_obj.obj"));
-  renderables_.push_back(Renderable::createFromFile("../objects/windmill/windmill.obj"));
-  renderables_.push_back(Renderable::createFromFile("../objects/chapel/chapel_obj.obj"));
-  renderables_.push_back(Renderable::createFromFile("../objects/capsule/capsule.obj"));
+  // renderables_.push_back(Renderable::createFromFile("../objects/house/house_obj.obj"));
+  // renderables_.push_back(Renderable::createFromFile("../objects/windmill/windmill.obj"));
+  // renderables_.push_back(Renderable::createFromFile("../objects/chapel/chapel_obj.obj"));
+  // renderables_.push_back(Renderable::createFromFile("../objects/capsule/capsule.obj"));
+  renderables_.push_back(Renderable::createFromFile("../../objects/brickWall_lowRes/brickWall.obj"));
 
 
   glViewport(0, 0, width(), height());

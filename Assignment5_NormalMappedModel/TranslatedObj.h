@@ -51,6 +51,12 @@ public:
     std::string getDiffuseMapPath();
 
     /**
+     * Gets the normal map file path for this translated .obj file to be fed to
+     * OpenGL.
+     */
+    std::string getNormalMapPath();
+
+    /**
      * Translates the data of an already loaded .obj file to a format that can
      * be easily used with OpenGL.
      * 
@@ -75,7 +81,8 @@ public:
                                     const QVector<QVector2D>& textureCoordinates,
                                     const QVector<QVector3D>& normals,
                                     const QVector<QVector<QVector3D>>& faces,
-                                    const std::string& diffuseMapPath);
+                                    const std::string& diffuseMapPath,
+                                    const std::string& normalMapPath);
 
 private:
     /**
@@ -86,7 +93,8 @@ private:
                   unsigned int numData,
                   unsigned int numIndices,
                   unsigned int vertexSize,
-                  const std::string& diffuseMapPath);
+                  const std::string& diffuseMapPath,
+                  const std::string& normalMapPath);
 
     /**
      * Reorders vertex data for use in OpenGL.
@@ -124,4 +132,5 @@ private:
 
     // Other OpenGL data
     std::string diffuseMapPath_;
+    std::string normalMapPath_;
 };

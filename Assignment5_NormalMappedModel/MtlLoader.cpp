@@ -29,7 +29,16 @@ void MtlLoader::clear() {
  * Gets the path for the diffuse map specified in the loaded .mtl file.
  */
 std::string MtlLoader::getDiffuseMapPath() {
+    std::cout << "Mtl diffuse map path: " << diffuseMapPath_ << std::endl;
     return diffuseMapPath_;
+}
+
+/**
+ * Gets the path for the normal map specified in the loaded .mtl file.
+ */
+std::string MtlLoader::getNormalMapPath() {
+    std::cout << "Mtl normal map path: " << normalMapPath_ << std::endl;
+    return normalMapPath_;
 }
 
 /**
@@ -52,8 +61,8 @@ MtlLoader& MtlLoader::operator=(const MtlLoader&) { }
  * loader's memory.
  *
  * @param line The line to be processed and loaded, if valid.
- * @throws invalid_argument if the line is imparsarsable as a diffuse map file
- *                          name declaration.
+ * @throws invalid_argument if the line is imparsarsable as a diffuse or normal
+ *                          map file name declaration.
  */
 void MtlLoader::processLine(const std::string& line) {
     QVector<std::string> splitLine = split(line, ' ');
@@ -62,6 +71,8 @@ void MtlLoader::processLine(const std::string& line) {
             std::string lineType = splitLine.at(0);
             if (lineType == "map_Kd") {
                 MtlLoader::processMapKdLine(splitLine);
+            } else if (lineType == "map_Bump") {
+                MtlLoader::processMapBumpLine(splitLine);
             }
         }
     } catch (std::exception& ex) {
@@ -103,5 +114,41 @@ void MtlLoader::processMapKdLine(const QVector<std::string>& splitLine) {
         ppmFile.close();
     } else {
         throw std::invalid_argument("Unable to open file at: " + diffuseMapPath);
+    }
+}
+
+/**
+ * Takes a normal map file name declaration line, and if valid, stores the
+ * file path in the loader's memory.
+ *
+ * @param splitLine The normal map file name declaration line, already split
+ *                  into different entries.
+ * @throws invalid_argument if splitLine does not contain a single additional
+ *                          entry past "map_Bump" representing the file
+ *                          name; if the specified file name is not a .ppm
+ *                          file; or if the file at the given path simply
+ *                          cannot be opened.
+ */
+void MtlLoader::processMapBumpLine(const QVector<std::string>& splitLine) {
+    if (splitLine.size() != 2) {
+        throw std::invalid_argument("Line does not contain a proper normal "
+                                    "map file name declaration.");
+    }
+
+    std::string normalMapPath = splitLine.at(1);
+    int pathStringLength = normalMapPath.size();
+    if (pathStringLength < 4 ||
+        normalMapPath.substr(pathStringLength - 4, pathStringLength) != ".ppm") {
+        throw std::invalid_argument("The specified normal map file name must "
+                                    "be a .ppm file.");
+    }
+
+    std::ifstream ppmFile;
+    ppmFile.open(filePathPrefix_ + normalMapPath);
+    if (ppmFile.is_open()) {
+        normalMapPath_ = filePathPrefix_ + normalMapPath;
+        ppmFile.close();
+    } else {
+        throw std::invalid_argument("Unable to open file at: " + normalMapPath);
     }
 }
