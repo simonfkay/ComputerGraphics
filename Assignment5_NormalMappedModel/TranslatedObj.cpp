@@ -62,7 +62,6 @@ std::string TranslatedObj::getNormalMapPath() {
     return normalMapPath_;
 }
 
-// [TODO: Inside]
 /**
  * Translates the data of an already loaded .obj file to a format that can be
  * easily used with OpenGL.
@@ -104,9 +103,7 @@ TranslatedObj* TranslatedObj::translate(const QVector<QVector3D>& positions, con
         IndexedVertex* v1 = indexedVertices.at(faceIndices.at(ii + 1));
         IndexedVertex* v2 = indexedVertices.at(faceIndices.at(ii + 2));
 
-        QVector3D tangent;
-
-        TranslatedObj::computeTangentBasis(v0, v1, v2, tangent);
+        TranslatedObj::computeTangentBasis(v0, v1, v2);
     }
 
     // Convert reordered vertex data to array
@@ -165,8 +162,17 @@ TranslatedObj::TranslatedObj(float* data,
                                                                  diffuseMapPath_(diffuseMapPath),
                                                                  normalMapPath_(normalMapPath) { }
 
-// [TODO: Write comment, complete function
-void TranslatedObj::computeTangentBasis(IndexedVertex* v0, IndexedVertex* v1, IndexedVertex* v2, QVector3D& tangent) {
+/**
+ * From the three vertices (containing position, texture coordinate, and normal
+ * data, and corresponding to a triangle), calculate the corresponding tangent
+ * vector, and add it to the list for each indexed vertex to be averaged out
+ * later.
+ *
+ * @param v0 The first indexed vertex of this triangle.
+ * @param v1 The second indexed vertex of this triangle.
+ * @param v2 The third indexed vertex of this triangle.
+ */
+void TranslatedObj::computeTangentBasis(IndexedVertex* v0, IndexedVertex* v1, IndexedVertex* v2) {
     // Shortcuts for vertex positions
     QVector3D& pos0 = v0->position_;
     QVector3D& pos1 = v1->position_;

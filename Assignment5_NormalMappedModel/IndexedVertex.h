@@ -1,9 +1,9 @@
 #pragma once
 
+#include <QVector>
 #include <QVector2D>
 #include <QVector3D>
 
-// [TODO: Inside]
 /**
  * Represents a tuple of position, normal, and texture coordinates for a
  * vertex, for re-indexing purposes.
@@ -36,12 +36,20 @@ struct IndexedVertex {
                                            normalIndex_(normalIndex),
                                            newIndex_(newIndex) { }
 
-    // [TODO: Write comment]
+    /**
+     * Adds a tangent vector to this vertex's list, to be averaged out later.
+     *
+     * @param tangent The tangent vector to be added.
+     */
     void addTangent(const QVector3D& tangent) {
         tangents_.push_back(tangent);
     }
 
-    // [TODO: Write comment]
+    /**
+     * Average out all the added tangent vectors for this vertex.
+     *
+     * @returns The final averaged out tangent vector for this vertex.
+     */
     QVector3D getFinalTangent() {
         QVector3D tangentSum;
         for (int ii = 0; ii < tangents_.size(); ++ii) {

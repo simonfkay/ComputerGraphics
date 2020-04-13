@@ -7,7 +7,6 @@
 
 #include "IndexedVertex.h"
 
-// [TODO: Inside]
 /**
  * Represents an already-loaded .obj file that has been translated into a
  * format for easy OpenGL access.
@@ -85,7 +84,6 @@ public:
                                     const std::string& diffuseMapPath,
                                     const std::string& normalMapPath);
 
-// [TODO: Below]
 private:
     /**
      * Standard parametrized private constructor for translated object data.
@@ -98,11 +96,19 @@ private:
                   const std::string& diffuseMapPath,
                   const std::string& normalMapPath);
 
-    // [TODO: Write comment]
+    /**
+     * From the three vertices (containing position, texture coordinate, and
+     * normal data, and corresponding to a triangle), calculate the
+     * corresponding tangent vector, and add it to the list for each indexed
+     * vertex to be averaged out later.
+     *
+     * @param v0 The first indexed vertex of this triangle.
+     * @param v1 The second indexed vertex of this triangle.
+     * @param v2 The third indexed vertex of this triangle.
+     */
     static void computeTangentBasis(IndexedVertex* v0,
                                     IndexedVertex* v1,
-                                    IndexedVertex* v2,
-                                    QVector3D& tangent);
+                                    IndexedVertex* v2);
 
     /**
      * Reorders vertex data for use in OpenGL.

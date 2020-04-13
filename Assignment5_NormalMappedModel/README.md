@@ -6,7 +6,7 @@
   * Simon Kay
   * Partner N/A
 * How many hours did it take you to complete this Assignment?
-  * 10:30 + 6:45 AM - 
+  * 10:45 + 7:00 AM - 
 * Did you collaborate or share ideas with any other students/TAs/Professors?
   * N/A
 * Did you use any external resources? 
