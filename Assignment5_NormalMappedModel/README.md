@@ -6,13 +6,12 @@
   * Simon Kay
   * Partner N/A
 * How many hours did it take you to complete this Assignment?
-  * 7:45 + 4:00 AM - 
+  * 10:30 + 6:45 AM - 
 * Did you collaborate or share ideas with any other students/TAs/Professors?
   * N/A
 * Did you use any external resources? 
-  * (tbd if any)
-  * (tbd if any)
-  * (tbd if any)
+  * https://learnopengl.com/Advanced-Lighting/Normal-Mapping
+  * http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-13-normal-mapping/#normal-textures
   
 ## Description
 

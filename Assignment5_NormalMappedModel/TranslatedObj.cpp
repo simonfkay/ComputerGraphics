@@ -62,6 +62,7 @@ std::string TranslatedObj::getNormalMapPath() {
     return normalMapPath_;
 }
 
+// [TODO: Inside]
 /**
  * Translates the data of an already loaded .obj file to a format that can be
  * easily used with OpenGL.
@@ -93,22 +94,44 @@ TranslatedObj* TranslatedObj::translate(const QVector<QVector3D>& positions, con
 
     // Initialize constants
     unsigned int numIndexedVertices = indexedVertices.size();
-    unsigned int vertexSize = 3 + 2 + 3; // x, y, z; s, t; xn, yn, zn
+    unsigned int vertexSize = 3 + 2 + 3 + 3; // x, y, z; s, t; xn, yn, zn; xt, yt, zt;
     unsigned int numData = numIndexedVertices * vertexSize;
     unsigned int numIndices = faceIndices.size();
+
+    // Calculate tangents
+    for (unsigned int ii = 0; ii < numIndices; ii += 3) {
+        IndexedVertex* v0 = indexedVertices.at(faceIndices.at(ii));
+        IndexedVertex* v1 = indexedVertices.at(faceIndices.at(ii + 1));
+        IndexedVertex* v2 = indexedVertices.at(faceIndices.at(ii + 2));
+
+        QVector3D tangent;
+
+        TranslatedObj::computeTangentBasis(v0, v1, v2, tangent);
+    }
 
     // Convert reordered vertex data to array
     float* data = new float[numData];
     for (unsigned int ii = 0; ii < numIndexedVertices; ++ii) {
         IndexedVertex* nextVertex = indexedVertices.at(ii);
-        data[ii * vertexSize + 0] = nextVertex->position_.x();
-        data[ii * vertexSize + 1] = nextVertex->position_.y();
-        data[ii * vertexSize + 2] = nextVertex->position_.z();
-        data[ii * vertexSize + 3] = nextVertex->textureCoordinates_.x();
-        data[ii * vertexSize + 4] = nextVertex->textureCoordinates_.y();
-        data[ii * vertexSize + 5] = nextVertex->normal_.x();
-        data[ii * vertexSize + 6] = nextVertex->normal_.y();
-        data[ii * vertexSize + 7] = nextVertex->normal_.z();
+        QVector3D pos = nextVertex->position_;
+        QVector2D uv = nextVertex->textureCoordinates_;
+        QVector3D norm = nextVertex->normal_;
+        QVector3D tangent = nextVertex->getFinalTangent();
+
+        data[ii * vertexSize + 0] = pos.x();
+        data[ii * vertexSize + 1] = pos.y();
+        data[ii * vertexSize + 2] = pos.z();
+
+        data[ii * vertexSize + 3] = uv.x();
+        data[ii * vertexSize + 4] = uv.y();
+
+        data[ii * vertexSize + 5] = norm.x();
+        data[ii * vertexSize + 6] = norm.y();
+        data[ii * vertexSize + 7] = norm.z();
+
+        data[ii * vertexSize + 8] = tangent.x();
+        data[ii * vertexSize + 9] = tangent.y();
+        data[ii * vertexSize + 10] = tangent.z();
     }
 
     unsigned int* indices = new unsigned int[numIndices];
@@ -141,6 +164,36 @@ TranslatedObj::TranslatedObj(float* data,
                                                                  vertexSize_(vertexSize),
                                                                  diffuseMapPath_(diffuseMapPath),
                                                                  normalMapPath_(normalMapPath) { }
+
+// [TODO: Write comment, complete function
+void TranslatedObj::computeTangentBasis(IndexedVertex* v0, IndexedVertex* v1, IndexedVertex* v2, QVector3D& tangent) {
+    // Shortcuts for vertex positions
+    QVector3D& pos0 = v0->position_;
+    QVector3D& pos1 = v1->position_;
+    QVector3D& pos2 = v2->position_;
+
+    // Shortcuts for tex coordinates
+    QVector2D& uv0 = v0->textureCoordinates_;
+    QVector2D& uv1 = v1->textureCoordinates_;
+    QVector2D& uv2 = v2->textureCoordinates_;
+
+    // Position deltas
+    QVector3D deltaPos1 = pos1 - pos0;
+    QVector3D deltaPos2 = pos2 - pos0;
+
+    // UV deltas
+    QVector2D deltaUV1 = uv1 - uv0;
+    QVector2D deltaUV2 = uv2 - uv0;
+
+    // Calculate tangent
+    float r = 1.0f / (deltaUV1.x() * deltaUV2.y() - deltaUV1.y() * deltaUV2.x());
+    tangent = (deltaPos1 * deltaUV2.y() - deltaPos2 * deltaUV1.y()) * r;
+
+    // Set tangent data in vertex information
+    v0->addTangent(tangent);
+    v1->addTangent(tangent);
+    v2->addTangent(tangent);
+}
 
 /**
  * Reorders vertex data for use in OpenGL.

@@ -65,6 +65,7 @@ void Renderable::init(TranslatedObj* object)
 
     // Set our model matrix to identity
     modelMatrix_.setToIdentity();
+    modelMatrix_.scale(2, 2, 2);
 
     // Set our number of trianges.
     numTris_ = numIndices / 3;
@@ -91,11 +92,18 @@ void Renderable::init(TranslatedObj* object)
     // create a temporary array for our indexes
     ibo_.allocate(indices, numIndices * sizeof(unsigned int));
 
-    // Make sure we setup our shader inputs properly
+    // Position
     shader_.enableAttributeArray(0);
     shader_.setAttributeBuffer(0, GL_FLOAT, 0, 3, vertexSize * sizeof(float));
+    // UV
     shader_.enableAttributeArray(1);
     shader_.setAttributeBuffer(1, GL_FLOAT, 3 * sizeof(float), 2, vertexSize * sizeof(float));
+    // Normal
+    shader_.enableAttributeArray(2);
+    shader_.setAttributeBuffer(2, GL_FLOAT, 5 * sizeof(float), 3, vertexSize * sizeof(float));
+    // Tangent
+    shader_.enableAttributeArray(3);
+    shader_.setAttributeBuffer(3, GL_FLOAT, 8 * sizeof(float), 3, vertexSize * sizeof(float));
 
     // Release our vao and THEN release our buffers.
     vao_.release();
@@ -131,10 +139,11 @@ void Renderable::draw(const QMatrix4x4& view, const QMatrix4x4& projection)
     shader_.setUniformValue("viewMatrix", view);
     shader_.setUniformValue("projectionMatrix", projection);
 
-    //shader_.setUniformValue("lightPos", xx);
-
     shader_.setUniformValue("diffuseMap", 0);
     shader_.setUniformValue("normalMap", 1);
+
+    shader_.setUniformValue("lightPos", QVector3D(1.0f, 2.0f, 2.0f));
+    shader_.setUniformValue("viewPos", QVector3D(0.0f, 0.0f, 4.0f));
 
     vao_.bind();
     

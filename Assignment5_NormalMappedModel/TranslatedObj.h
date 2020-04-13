@@ -7,6 +7,7 @@
 
 #include "IndexedVertex.h"
 
+// [TODO: Inside]
 /**
  * Represents an already-loaded .obj file that has been translated into a
  * format for easy OpenGL access.
@@ -84,6 +85,7 @@ public:
                                     const std::string& diffuseMapPath,
                                     const std::string& normalMapPath);
 
+// [TODO: Below]
 private:
     /**
      * Standard parametrized private constructor for translated object data.
@@ -95,6 +97,12 @@ private:
                   unsigned int vertexSize,
                   const std::string& diffuseMapPath,
                   const std::string& normalMapPath);
+
+    // [TODO: Write comment]
+    static void computeTangentBasis(IndexedVertex* v0,
+                                    IndexedVertex* v1,
+                                    IndexedVertex* v2,
+                                    QVector3D& tangent);
 
     /**
      * Reorders vertex data for use in OpenGL.
