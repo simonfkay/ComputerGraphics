@@ -1,18 +1,20 @@
 #include "Renderable.h"
 #include "ObjLoader.h"
 
+#include <iostream>
+
 #include <QtGui>
 #include <QtOpenGL>
 
-Renderable::Renderable() : vbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), texture_(QOpenGLTexture::Target2D), normalMap_(QOpenGLTexture::Target2D), numTris_(0), rotationAxis_(0.0, 1.0, 0.0), rotationSpeed_(0.125)
+Renderable::Renderable() : vbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), diffuseMap_(QOpenGLTexture::Target2D), normalMap_(QOpenGLTexture::Target2D), numTris_(0), rotationAxis_(0.0, 1.0, 0.0), rotationSpeed_(0.125)
 {
     rotationAngle_ = 0.0;
 }
 
 Renderable::~Renderable()
 {
-    if (texture_.isCreated()) {
-        texture_.destroy();
+    if (diffuseMap_.isCreated()) {
+        diffuseMap_.destroy();
     }
     if (normalMap_.isCreated()) {
         normalMap_.destroy();
@@ -58,7 +60,7 @@ void Renderable::init(TranslatedObj* object)
     QString diffuseMapPath = QString::fromStdString(object->getDiffuseMapPath());
     QString normalMapPath = QString::fromStdString(object->getNormalMapPath());
 
-    texture_.setData(QImage(diffuseMapPath).mirrored(true, true));
+    diffuseMap_.setData(QImage(diffuseMapPath).mirrored(true, true));
     normalMap_.setData(QImage(normalMapPath).mirrored(true, true));
 
     // Set our model matrix to identity
@@ -131,12 +133,19 @@ void Renderable::draw(const QMatrix4x4& view, const QMatrix4x4& projection)
 
     //shader_.setUniformValue("lightPos", xx);
 
+    shader_.setUniformValue("diffuseMap", 0);
+    shader_.setUniformValue("normalMap", 1);
+
     vao_.bind();
-    texture_.bind();
-    normalMap_.bind();
+    
+    diffuseMap_.bind(0);
+    normalMap_.bind(1);
+
     glDrawElements(GL_TRIANGLES, 3 * numTris_, GL_UNSIGNED_INT, 0);
-    normalMap_.bind();
-    texture_.release();
+    
+    normalMap_.release(1);
+    diffuseMap_.release(0);
+
     vao_.release();
     shader_.release();
 }

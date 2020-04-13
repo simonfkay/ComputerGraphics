@@ -12,9 +12,8 @@ protected:
     QMatrix4x4 modelMatrix_;
     // For now, we have only one shader per object
     QOpenGLShaderProgram shader_;
-    // For now, we have only one texture per object
-    QOpenGLTexture texture_;
-    // For now, we have only one texture per object
+    // For now, we have only two textures per object
+    QOpenGLTexture diffuseMap_;
     QOpenGLTexture normalMap_;
     // For now, we have a single unified buffer per object
     QOpenGLBuffer vbo_;

@@ -29,7 +29,6 @@ void MtlLoader::clear() {
  * Gets the path for the diffuse map specified in the loaded .mtl file.
  */
 std::string MtlLoader::getDiffuseMapPath() {
-    std::cout << "Mtl diffuse map path: " << diffuseMapPath_ << std::endl;
     return diffuseMapPath_;
 }
 
@@ -37,7 +36,6 @@ std::string MtlLoader::getDiffuseMapPath() {
  * Gets the path for the normal map specified in the loaded .mtl file.
  */
 std::string MtlLoader::getNormalMapPath() {
-    std::cout << "Mtl normal map path: " << normalMapPath_ << std::endl;
     return normalMapPath_;
 }
 

@@ -6,11 +6,11 @@ in vec3 normalCoords;
 
 out vec4 fragmentColor;
 
-uniform sampler2D tex;
+uniform sampler2D diffuseMap;
 uniform sampler2D normalMap;
 
 void main() {
-  vec3 objectColor = texture(tex, texCoords).xyz;
+  vec3 objectColor = texture(diffuseMap, texCoords).xyz;
   vec3 normal = texture(normalMap, texCoords).xyz;
 
   fragmentColor = vec4(objectColor, 1.0f);

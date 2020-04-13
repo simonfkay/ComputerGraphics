@@ -25,7 +25,6 @@ void FileLoader::loadFile(const std::string& filePath) {
     FileLoader::initFilePathPrefix(filePath);
 
     std::ifstream file;
-    std::cout << filePath << std::endl;
     file.open(filePath);
     if (file.is_open()) {
         std::string line;
