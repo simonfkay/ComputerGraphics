@@ -65,7 +65,6 @@ void Renderable::init(TranslatedObj* object)
 
     // Set our model matrix to identity
     modelMatrix_.setToIdentity();
-    modelMatrix_.scale(2, 2, 2);
 
     // Set our number of trianges.
     numTris_ = numIndices / 3;
@@ -142,7 +141,7 @@ void Renderable::draw(const QMatrix4x4& view, const QMatrix4x4& projection)
     shader_.setUniformValue("diffuseMap", 0);
     shader_.setUniformValue("normalMap", 1);
 
-    shader_.setUniformValue("lightPos", QVector3D(1.0f, 2.0f, 2.0f));
+    shader_.setUniformValue("lightPos", QVector3D(0.0f, 2.0f, 3.0f));
     shader_.setUniformValue("viewPos", QVector3D(0.0f, 0.0f, 4.0f));
 
     vao_.bind();

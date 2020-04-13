@@ -193,7 +193,7 @@ void TranslatedObj::computeTangentBasis(IndexedVertex* v0, IndexedVertex* v1, In
 
     // Calculate tangent
     float r = 1.0f / (deltaUV1.x() * deltaUV2.y() - deltaUV1.y() * deltaUV2.x());
-    tangent = (deltaPos1 * deltaUV2.y() - deltaPos2 * deltaUV1.y()) * r;
+    QVector3D tangent = (deltaPos1 * deltaUV2.y() - deltaPos2 * deltaUV1.y()) * r;
 
     // Set tangent data in vertex information
     v0->addTangent(tangent);
