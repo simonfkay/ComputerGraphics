@@ -1,4 +1,4 @@
-# Lab 10 - Terrain
+# Lab 9 - Heightmaps
 
 <img align="right" src="./media/terrain.JPG" width="400px" alt="picture">
 
@@ -7,12 +7,12 @@
 ## Modify this section
 
 - How many hours did it take you to complete this lab?
+  - 2:00 + 8:30 AM - 
 - Did you collaborate with any other students/TAs/Professors?
+  - N/A
 - Did you use any external resources? (Cite them below)
   - tbd
   - tbd
-- (Optional) What was your favorite part of the lab?
-- (Optional) How would you improve the lab?
 
 ## Logistics
 

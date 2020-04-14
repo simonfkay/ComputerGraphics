@@ -1,6 +1,7 @@
 #include "TerrainQuad.h"
 
 #include <QOpenGLFunctions_3_3_core>
+#include <algorithm>
 
 TerrainQuad::TerrainQuad() : lightPos_(0.5f, 0.5f, -2.0f), sign_(1.0f), numIdxPerStrip_(0), numStrips_(0), heightTexture_(QOpenGLTexture::Target2D)
 {}
@@ -25,24 +26,35 @@ void TerrainQuad::init(const QString& textureFile)
     QVector3D normal(0.0, 1.0, 0.0);
 
     // TODO:  You may need to change the path here.
-    QImage heightImage("../../terrain2.ppm");
+    QImage heightImage("../terrain2.ppm");
+    float scale = 255.0f;
 
     unsigned int curIdx = 0;
     // Populate our grid
-    for (unsigned int r = 0; r < numRows+1; ++r) {
-        for (unsigned int c = 0; c < numCols+1; ++c) {
+    for (unsigned int r = 0; r < numRows; ++r) {
+        for (unsigned int c = 0; c < numCols; ++c) {
             // compute our top coordinate
             float z = r * rowStep;
             float x = c * colStep;
+
             // TODO - Before changing anything in the shaders, we can get heightmapping
             // to work by changing this y coordinate.  Implement this now to create a heightmap!
-            float y = 0.0;
+            //float y = 0.0;
+
+            // z and x are normalized coordinates
+            // float imageX = std::max(std::min(x * heightImage.width(), (float) numRows - 1), 0.0f);
+            // float imageY = std::max(std::min(z * heightImage.height(), (float) numRows - 1), 0.0f);
+            // qDebug() << x * heightImage.width() << ", " << z * heightImage.height();
+            float h = heightImage.pixelColor(x * heightImage.width(), z * heightImage.height()).red();
+            h /= scale;
+
+
             // Be explicit about our texture coords
             float u = z;
             float v = x;
-            pos << QVector3D(x, y, z);
+            pos << QVector3D(x, h, z);
             norm << normal;
-            texCoord << QVector2D(u, v);
+            texCoord << QVector2D(v, u);
         }
     }
     // Assign our strips
@@ -119,6 +131,7 @@ void TerrainQuad::draw(const QMatrix4x4& world, const QMatrix4x4& view, const QM
 //    shader_.setUniformValue("tex", GL_TEXTURE0);
 //    shader_.setUniformValue("colorTex", GL_TEXTURE1 - GL_TEXTURE0);
     for (int s = 0; s < numStrips_; ++s) {
+        f.glDrawElements(GL_TRIANGLE_STRIP, numStrips_ * numIdxPerStrip_, GL_UNSIGNED_INT, 0);
         // TODO:  Draw the correct number of triangle strips using glDrawElements
     }
 //    heightTexture_.release();

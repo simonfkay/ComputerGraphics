@@ -2,6 +2,7 @@
 
 #include "TerrainQuad.h"
 #include "UnitQuad.h"
+#include <iostream>
 
 //////////////////////////////////////////////////////////////////////
 // Publics
@@ -15,6 +16,7 @@ BasicWidget::BasicWidget(QWidget* parent) : QOpenGLWidget(parent), logger_(this)
 
 BasicWidget::~BasicWidget()
 {
+    makeCurrent();
     for (auto renderable : renderables_) {
         delete renderable;
     }
@@ -62,9 +64,11 @@ void BasicWidget::mouseMoveEvent(QMouseEvent* mouseEvent)
   lastMouseLoc_ = mouseEvent->pos();
   if (mouseAction_ == Rotate) {
     // TODO:  Implement rotating the camera
+    qDebug() << "Rotate";
   } else if (mouseAction_ == Zoom) {
     // TODO:  Implement zoom by moving the camera
     // Zooming is moving along the gaze direction by some amount.
+    qDebug() << "Zoom";
   } 
   update();
 }
@@ -81,7 +85,7 @@ void BasicWidget::initializeGL()
 
   qDebug() << QDir::currentPath();
   // TODO:  You may have to change these paths.
-  QString terrainTex = "../../colormap.ppm";
+  QString terrainTex = "../colormap.ppm";
 
   TerrainQuad* terrain = new TerrainQuad();
   terrain->init(terrainTex);
@@ -98,17 +102,17 @@ void BasicWidget::initializeGL()
 
 void BasicWidget::resizeGL(int w, int h)
 {
-    if (!logger_.isLogging()) {
-        logger_.initialize();
-        // Setup the logger for real-time messaging
-        connect(&logger_, &QOpenGLDebugLogger::messageLogged, [=]() {
-            const QList<QOpenGLDebugMessage> messages = logger_.loggedMessages();
-            for (auto msg : messages) {
-                qDebug() << msg;
-            }
-            });
-        logger_.startLogging();
-    }
+    // if (!logger_.isLogging()) {
+    //     logger_.initialize();
+    //     // Setup the logger for real-time messaging
+    //     connect(&logger_, &QOpenGLDebugLogger::messageLogged, [=]() {
+    //         const QList<QOpenGLDebugMessage> messages = logger_.loggedMessages();
+    //         for (auto msg : messages) {
+    //             qDebug() << msg;
+    //         }
+    //         });
+    //     logger_.startLogging();
+    // }
   glViewport(0, 0, w, h);
 
   camera_.setPerspective(70.f, (float)w / (float)h, 0.001, 1000.0);
