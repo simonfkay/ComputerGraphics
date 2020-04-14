@@ -14,7 +14,8 @@ BasicWidget::BasicWidget(QWidget* parent) : QOpenGLWidget(parent), logger_(this)
 }
 
 BasicWidget::~BasicWidget()
-{
+{ 
+    makeCurrent();
     for (auto renderable : renderables_) {
         delete renderable;
     }
@@ -133,12 +134,12 @@ void BasicWidget::setupViewQuad()
 void BasicWidget::setupShaders()
 {
     // TODO:  You may need to change these paths based on how/where you choose to build
-    QString vertexFilename = "../../FBOVert.glsl";
+    QString vertexFilename = "../FBOVert.glsl";
     bool ok = shader_.addShaderFromSourceFile(QOpenGLShader::Vertex, vertexFilename);
     if (!ok) {
         qDebug() << shader_.log();
     }
-    QString fragmentFilename = "../../FBOFrag.glsl";
+    QString fragmentFilename = "../FBOFrag.glsl";
     ok = shader_.addShaderFromSourceFile(QOpenGLShader::Fragment, fragmentFilename);
     if (!ok) {
         qDebug() << shader_.log();
@@ -180,7 +181,7 @@ void BasicWidget::initializeGL()
 
   qDebug() << QDir::currentPath();
   // TODO:  You may have to change these paths.
-  QString terrainTex = "../../colormap.ppm";
+  QString terrainTex = "../colormap.ppm";
 
   TerrainQuad* terrain = new TerrainQuad();
   terrain->init(terrainTex);
@@ -197,17 +198,17 @@ void BasicWidget::initializeGL()
 
 void BasicWidget::resizeGL(int w, int h)
 {
-    if (!logger_.isLogging()) {
-        logger_.initialize();
-        // Setup the logger for real-time messaging
-        connect(&logger_, &QOpenGLDebugLogger::messageLogged, [=]() {
-            const QList<QOpenGLDebugMessage> messages = logger_.loggedMessages();
-            for (auto msg : messages) {
-                qDebug() << msg;
-            }
-            });
-        logger_.startLogging();
-    }
+    // if (!logger_.isLogging()) {
+    //     logger_.initialize();
+    //     // Setup the logger for real-time messaging
+    //     connect(&logger_, &QOpenGLDebugLogger::messageLogged, [=]() {
+    //         const QList<QOpenGLDebugMessage> messages = logger_.loggedMessages();
+    //         for (auto msg : messages) {
+    //             qDebug() << msg;
+    //         }
+    //         });
+    //     logger_.startLogging();
+    // }
   camera_.setPerspective(70.f, (float)w / (float)h, 0.001, 1000.0);
   glViewport(0, 0, w, h);
 }
