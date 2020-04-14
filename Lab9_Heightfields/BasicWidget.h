@@ -28,6 +28,8 @@ private:
   enum MouseControl {NoAction = 0, Rotate, Zoom};
   QPoint lastMouseLoc_;
   MouseControl mouseAction_;
+  float movementSpeed_;
+  bool firstMouse_ = true;
 
 protected:
   // Required interaction overrides
@@ -46,5 +48,5 @@ public:
   virtual ~BasicWidget();
   
   // Make sure we have some size that makes sense.
-  QSize sizeHint() const {return QSize(800,600);}
+  QSize sizeHint() const override {return QSize(800,600);}
 };

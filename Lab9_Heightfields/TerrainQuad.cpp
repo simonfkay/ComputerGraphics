@@ -17,17 +17,16 @@ void TerrainQuad::init(const QString& textureFile)
     QVector<QVector2D> texCoord;
     QVector<unsigned int> idx;
     // We need to figure out how many rows and columns we want!
-    const unsigned int numRows = 300;
-    const unsigned int numCols = 300;
+    const unsigned int numRows = 50;
+    const unsigned int numCols = 50;
     float rowStep = 1.0f / (float)numRows;
     float colStep = 1.0f / (float)numCols;
 
     QVector<unsigned int> stripIdx;
     QVector3D normal(0.0, 1.0, 0.0);
 
-    // TODO:  You may need to change the path here.
     QImage heightImage("../terrain2.ppm");
-    float scale = 255.0f;
+    float scale = 255.0f * 8.0f;
 
     unsigned int curIdx = 0;
     // Populate our grid
@@ -37,22 +36,18 @@ void TerrainQuad::init(const QString& textureFile)
             float z = r * rowStep;
             float x = c * colStep;
 
-            // TODO - Before changing anything in the shaders, we can get heightmapping
-            // to work by changing this y coordinate.  Implement this now to create a heightmap!
-            //float y = 0.0;
-
-            // z and x are normalized coordinates
-            // float imageX = std::max(std::min(x * heightImage.width(), (float) numRows - 1), 0.0f);
-            // float imageY = std::max(std::min(z * heightImage.height(), (float) numRows - 1), 0.0f);
-            // qDebug() << x * heightImage.width() << ", " << z * heightImage.height();
+            // Option 1: CPU heightmapping
             float h = heightImage.pixelColor(x * heightImage.width(), z * heightImage.height()).red();
             h /= scale;
+            pos << QVector3D(x, h, z);
 
+            // Option 2: GPU heightmapping
+            // float y = 0.0;
+            // pos << QVector3D(x, y, z);
 
             // Be explicit about our texture coords
             float u = z;
             float v = x;
-            pos << QVector3D(x, h, z);
             norm << normal;
             texCoord << QVector2D(v, u);
         }
@@ -114,29 +109,23 @@ void TerrainQuad::draw(const QMatrix4x4& world, const QMatrix4x4& view, const QM
 
     vao_.bind();
 
-    // TODO - After seeing the initial heightmap by querying in C++ the height image
-    // uncommment these lines to change implementations to use the vertex shader!
-    // We bind our height texture at Texture Unit 0
-//    f.glActiveTexture(GL_TEXTURE0);
-//    heightTexture_.bind();
+    f.glActiveTexture(GL_TEXTURE0);
+    heightTexture_.bind();
 
     // And our color texture at Texture Unit 1.
-//    f.glActiveTexture(GL_TEXTURE1);
+    f.glActiveTexture(GL_TEXTURE1);
     texture_.bind();
 
     // Setup our shader uniforms for multiple textures.  Make sure we use the correct
     // texture units as defined above!
-    // TODO - Uncomment these lines when youa re ready to move from C++ implementation to
-    // the GPU shader implementation.
-//    shader_.setUniformValue("tex", GL_TEXTURE0);
-//    shader_.setUniformValue("colorTex", GL_TEXTURE1 - GL_TEXTURE0);
+    shader_.setUniformValue("tex", GL_TEXTURE0);
+    shader_.setUniformValue("colorTex", GL_TEXTURE1 - GL_TEXTURE0);
     for (int s = 0; s < numStrips_; ++s) {
         f.glDrawElements(GL_TRIANGLE_STRIP, numStrips_ * numIdxPerStrip_, GL_UNSIGNED_INT, 0);
-        // TODO:  Draw the correct number of triangle strips using glDrawElements
     }
-//    heightTexture_.release();
+    heightTexture_.release();
     texture_.release();
-//    f.glActiveTexture(GL_TEXTURE0);
+    f.glActiveTexture(GL_TEXTURE0);
     vao_.release();
     shader_.release();
 }

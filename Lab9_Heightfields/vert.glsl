@@ -17,18 +17,21 @@ out vec3 norm;
 out vec3 fragPos;
 
 void main()
-{
-    // TODO:  Extract the height from our heightmap and modify 
-    // our input position.
+{   
+    // Option 1: CPU heightmapping
     vec4 mappedPos = vec4(position, 1.0);
 
-    // We have our transformed position set properly now
+    // Option 2: GPU heightmapping
+    // vec4 heightVec = texture(tex, textureCoords);
+    // float heightValue = heightVec.r;
+    // float scale = 255.0 * 8.0;
+    // float height = heightValue / scale;
+    // vec4 mappedPos = vec4(position.x, height, position.z, 1.0);
+
+    // Common code:
     gl_Position = projectionMatrix*viewMatrix*modelMatrix*mappedPos;
-    // Our fragment pos for lighting.
-    fragPos = (modelMatrix*vec4(position, 1.0)).xyz;
-    // Make sure to transform the normal
+    fragPos = (modelMatrix*mappedPos).xyz;
     vec4 tmpnorm = modelMatrix*vec4(normal, 0.0);
     norm = normalize(tmpnorm.xyz);
-    // And we map our texture coordinates as appropriate
     texCoords = textureCoords;
 }

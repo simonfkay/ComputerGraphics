@@ -7,12 +7,11 @@
 ## Modify this section
 
 - How many hours did it take you to complete this lab?
-  - 2:00 + 8:30 AM - 
+  - 6 hours
 - Did you collaborate with any other students/TAs/Professors?
   - N/A
 - Did you use any external resources? (Cite them below)
-  - tbd
-  - tbd
+  - N/A
 
 ## Logistics
 

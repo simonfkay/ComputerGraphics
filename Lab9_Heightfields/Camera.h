@@ -11,12 +11,18 @@ protected:
 	QVector3D up_;
 	QMatrix4x4 projection_;
 
+	float fov_;
+	float aspect_;
+
+	float yaw_;
+	float pitch_;
+
 public:
 	Camera();
 	virtual ~Camera();
 
 	// Manipulate our Camera
-	void setPerspective(float fov, float aspect, float near, float far);
+	void calculatePerspective();
 
 	// Move our position.
 	void setPosition(const QVector3D& position);
@@ -34,6 +40,13 @@ public:
 	// Get our camera matrix
 	QMatrix4x4 getViewMatrix() const;
 	QMatrix4x4 getProjectionMatrix() const;
+
+	void modifyFov(float deltaFov);
+	void resetFov();
+	void setAspect(float aspect);
+
+	float modifyYaw(float deltaYaw);
+	float modifyPitch(float deltaPitch);
 
 private:
 
